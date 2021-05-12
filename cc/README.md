@@ -6,6 +6,18 @@
 go run main.go
 ```
 
+# Run tests
+
+```bash
+make test
+```
+
+# Build binary
+
+```bash
+make
+```
+
 ## Run using docker
 
 ```bash
