@@ -24,7 +24,7 @@ func main() {
 
 func serveHTTP(bindAddress string) {
 	server := http.NewServeMux()
-	server.HandleFunc("/", handler.Index)
 	server.HandleFunc("/health", handler.Health)
+	server.HandleFunc("/check", handler.Check)
 	http.ListenAndServe(bindAddress, server)
 }
