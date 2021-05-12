@@ -1,9 +1,11 @@
 package main
 
 import (
-	"log"
 	"flag"
+	"log"
 	"net/http"
+
+	handler "github.com/b21-cap0029/bangkit-capstone/tree/master/cc/internal/handler"
 )
 
 const (
@@ -22,19 +24,7 @@ func main() {
 
 func serveHTTP(bindAddress string) {
 	server := http.NewServeMux()
-	server.HandleFunc("/", index)
-	server.HandleFunc("/status", status)
+	server.HandleFunc("/", handler.Index)
+	server.HandleFunc("/health", handler.Health)
 	http.ListenAndServe(bindAddress, server)
-}
-
-func index(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	w.Write([]byte(`{"message":"Hello, World"}`))
-}
-
-func status(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	w.Write([]byte(`{"message":"Healthy"}`))
 }
