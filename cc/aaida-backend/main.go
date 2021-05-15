@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	handler "github.com/b21-cap0029/bangkit-capstone/cc/internal/handler"
+	handler "github.com/b21-cap0029/bangkit-capstone/cc/aaida-backend/internal/handler"
 )
 
 const (

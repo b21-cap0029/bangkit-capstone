@@ -1,4 +1,4 @@
-# AAIDA Backend Service
+# aaida-backend
 
 ## Run server locally
 
