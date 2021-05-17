@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: aaida-backend-production
+  name: aaida-backend-production
+spec:
+  ports:
+  - name: 8080-8080
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: aaida-backend
+    role: backend
+  sessionAffinity: None
+  type: ClusterIP

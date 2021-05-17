@@ -1,0 +1,39 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: aaida-backend-canary
+  labels:
+    app: aaida-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: aaida-backend
+  template:
+    metadata:
+      name: backend
+      labels:
+        app: aaida-backend
+        role: backend
+        env: canary
+    spec:
+      containers:
+      - name: backend
+        image: gcr.io/bangkit-aaida/aaida-backend
+        resources:
+          limits:
+            memory: "500Mi"
+            cpu: "100m"
+        imagePullPolicy: Always
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+        env:
+        - name: COMPONENT
+          value: backend
+        - name: VERSION
+          value: canary
+        ports:
+        - name: backend
+          containerPort: 8080
