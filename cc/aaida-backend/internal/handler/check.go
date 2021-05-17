@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	internal "github.com/b21-cap0029/bangkit-capstone/cc/internal"
+	internal "github.com/b21-cap0029/bangkit-capstone/cc/aaida-backend/internal"
 )
 
 func Check(w http.ResponseWriter, r *http.Request) {

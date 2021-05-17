@@ -1,26 +1,40 @@
-# AAIDA Backend Service
+# Cloud Computing
 
-## Run server locally
+Short README here
 
-```bash
-go run main.go
+
+## Directories
+
+```
+.
+|-- aaida-backend
+|-- cloudbuild.yaml
+`-- k8s
 ```
 
-# Run tests
+- aaida-backend directory contains the aaida-backend application source code and Dockerfile
+- cloudbuild.yaml is located here and run on Google Cloud Build to make multiple images
+- k8s directory holds kubernetes manifest files such as deployment and services, for now
+
+## ML Model
+
+> WARNING: Never commit models, model.zip, or model binary to `tensorflow-serving/model` dir!
+
+### Build tensorflow-serving locally
 
 ```bash
-make test
+gsutil cp -r gs://bangkit-aaida-model/* tensorflow-serving/model/ 
+docker build -t tensorflow-serving tensorflow-serving/
+docker run -it --rm -p 8500:8500 -p 8501:8501 tensorflow-serving
 ```
 
-# Build binary
+### How to upload ML models to Google Cloud Storage
 
 ```bash
-make
+unzip model.zip
+gsutil cp -r model/ gs://bangkit-aaida-model/
 ```
 
-## Run using docker
+## TODO
 
-```bash
-docker build -t aaida .
-docker run -p 8000:8000 aaida
-```
+- Implement CI/CD using Spinnaker

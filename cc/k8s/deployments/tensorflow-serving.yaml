@@ -1,0 +1,25 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: tensorflow-serving
+  labels:
+    app: tensorflow-serving
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tensorflow-serving
+  template:
+    metadata:
+      name: model
+      labels:
+        app: tensorflow-serving
+    spec:
+      containers:
+      - name: serving
+        image: gcr.io/bangkit-aaida/tensorflow-serving:v0.0.4
+        ports:
+        - name: grpc
+          containerPort: 8500
+        - name: rest
+          containerPort: 8501

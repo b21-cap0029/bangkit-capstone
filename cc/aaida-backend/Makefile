@@ -1,4 +1,4 @@
-MODULE=github.com/b21-cap0029/bangkit-capstone/cc
+MODULE=github.com/b21-cap0029/bangkit-capstone/cc/aaida-backend
 
 .PHONY: all
 all: dist/aaida
