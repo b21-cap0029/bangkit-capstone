@@ -14,4 +14,4 @@ spec:
     app: aaida-backend
     role: backend
   sessionAffinity: None
-  type: ClusterIP
+  type: LoadBalancer
