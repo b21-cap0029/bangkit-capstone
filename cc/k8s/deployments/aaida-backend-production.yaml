@@ -5,7 +5,7 @@ metadata:
   labels:
     app: aaida-backend
 spec:
-  replicas: 4
+  replicas: 1
   selector:
     matchLabels:
       app: aaida-backend
