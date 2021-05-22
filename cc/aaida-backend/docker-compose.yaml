@@ -1,0 +1,16 @@
+version: '3.9'
+services:
+  aaida-backend:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      TWITTER_CLIENT_ID: twitterClientIdExample
+      TWITTER_CLIENT_SECRET: twitterClientSecretExample
+      TENSORFLOW_SERVING_HOST: tensorflow-serving
+
+  tensorflow-serving:
+    image: gcr.io/bangkit-aaida/tensorflow-serving:v0.0.4
+    ports:
+      - "8500:8500"
+      - "8501:8501"
