@@ -1,5 +1,5 @@
 #prepare for dependencies from tweepy
-#import credentials.py
+#import credentials as cred
 import tweepy
 from tweepy import Stream
 from tweepy import OAuthHandler
