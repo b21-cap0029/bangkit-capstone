@@ -5,6 +5,7 @@ some of my resources
     https://github.com/vprusso/youtube_tutorials/blob/master/twitter_python
     https://github.com/codingforentrepreneurs/30-Days-of-Python
     https://github.com/rferrerme/twitter-stream/blob/master/files/twitter-stream.py
+    https://www.dataquest.io/blog/streaming-data-python/
 
 if i want to make it twitter-miner purpose
     https://nbviewer.jupyter.org/github/twistedhardware/mltutorial/blob/master/notebooks/data-mining/6.%20Twitter%20Streaming%20API.ipynb
