@@ -1,5 +1,10 @@
 #prepare for dependencies from tweepy
-#import credentials as cred
+
+
+from token import CONSUMER_KEY
+from token import CONSUMER_SECRET
+from token import ACCESS_TOKEN_KEY as ACCESS_TOKEN
+from token import ACCESS_TOKEN_SECRET
 import tweepy
 from tweepy import Stream
 from tweepy import OAuthHandler
@@ -8,17 +13,6 @@ import time
 import json
 import datetime
 import csv
-
-
-#environment variables
-
-
-#from secret-key import key(remove the # to provide the key)
-#CONSUMER_KEY="oAGvuZiLB56WqgZPdb9ogZJ8y"
-#CONSUMER_SECRET=""
-#ACCESS_TOKEN_KEY=""
-#ACCESS_TOKEN_SECRET=""
-#how to separate key from code?
 
 ##set boundary entries
 language = ['id']
@@ -67,7 +61,7 @@ class Listener(StreamListener):
 
 #creating the stream
 customListener = Listener()
-customStream = Stream(auth= api.auth, listener = customListener)
+customStream = Stream(auth = api.auth, listener = customListener)
 
 #start streaming
 try:
@@ -81,13 +75,16 @@ try:
         for tweet in tweepy.Cursor(customStream).items():
             tweets_encoded = tweet.text.encode('utf-8')
             tweet_decoded = tweets_encoded.decode('utf-8')
-            csvWriter.writerow([datetime.datetime.now().strftime("%Y-%m-%d %H:%M"), tweet.id, tweet.author.name , tweet_decoded,tweet._json["user"]["location"]])
+            csvWriter.writerow([datetime.datetime.now().strftime("%Y-%m-%d %H:%M"), tweet.user, tweet.author.name , tweet_decoded,tweet._json["user"]["location"]])
 except KeyboardInterrupt as e:
     print("stopped")
 finally:
     print('done')
     customStream.disconnect()
-    
+
+
+#preparing for prediction request
+
 #catch the prediction responses
 
 
