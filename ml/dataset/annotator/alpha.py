@@ -6,6 +6,8 @@ def load_response(response_name):
         res = [int(x.strip()) for x in f.readlines()]
     return res
 
-rnames = ['share-1', 'share-2', 'share-3']
+rname = input("response name: ")
+rnames = ['{}-{}'.format(rname, i) for i in range(1, 4)]
+
 A = list(map(load_response, rnames))
 print("krippendorff's alpha: {0:.5g}".format(alpha(A)))
