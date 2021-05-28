@@ -15,15 +15,18 @@ with open('twitter_fetch.csv','r') as f:
     line_counter=0
     for row in csvReader:
         if line_counter == 0:#untuk skip row dan penanda
+            line_counter =+ 1
             print("this is first entry")
         else:
             #create request and catch the responses
             payload = row[2]
-            resp = requests.post(url,data=payload)#atur parameter request disini(doc with requests)
-            result = resp.responses
+            #resp = requests.post(url,data=payload)#atur parameter request disini(doc with requests)
+            result = 1#test workload
+            #result = resp.responses
             if result >= 0.5:#sementara aja ini kalau resultnya dipasang treshold 0.5 dari 1
-                with open('responses-record.csv','a') as responses:
+                with open('responses-record.csv','a',newline='') as responses:
                     csvWriter = csv.writer(responses)
                     csvWriter.writerow([row[0],row[1],result])
+                    print(row[0],row[1],row[2],result)
     
 
