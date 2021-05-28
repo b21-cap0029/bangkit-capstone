@@ -21,3 +21,9 @@ finally:
         with open(filesave, 'a+') as f:
             writer = csv.writer(f)
             writer.writerow([status.author.screen_name, status.created_at, status.text])
+
+            import requests
+
+data = '"instances":[ ["makan tuh rasanya dikecawain mampus"]]}'
+
+response = requests.post('http://104.198.244.0:8501/v1/models/model:predict', data=data)
