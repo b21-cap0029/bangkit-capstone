@@ -1,9 +1,12 @@
-package handler
+package handler_test
 
 import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	. "github.com/b21-cap0029/bangkit-capstone/cc/aaida-backend/internal/handler"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckHandler(t *testing.T) {
@@ -22,9 +25,7 @@ func TestCheckHandler(t *testing.T) {
 			status, http.StatusOK)
 	}
 
-	expected := `{"class":"Negative","score":0.0004786849}` + "\n"
-	if rr.Body.String() != expected {
-		t.Errorf("handler returned unexpected body: got %v want %v",
-			rr.Body.String(), expected)
-	}
+	assert.Equal(t, http.StatusOK, rr.Code, "Should be equal")
+	assert.Equal(t, "{\"class\":\"Negative\",\"score\":0.0004786849}\n",
+		rr.Body.String(), "Should be equal")
 }
