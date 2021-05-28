@@ -1,19 +1,29 @@
 import requests
 import csv
+import os
+import os.path
 
-url="localhost"#dummy load
+print(os.getcwd())
+workdir = os.chdir("..")#naik satu folder untuk ambil twitter-fetch
+print(workdir)
+url="localhost"#dummy load untuk setting request tensor
 
-with ('twitter-fetch','r') as f:
+
+#path = "E:\BANGKIT\Project\bangkit-capstone\cc\twitter-stream" ##belum bisa akses relative path sama belum bisa buat workpathnya(aulah)
+with open('twitter-fetch-dummy.csv','r') as f:
     csvReader= csv.reader(f)
+    line_counter=0
+    for row in csvReader:
+        if line_counter == 0:#untuk skip row dan penanda
+            print("this is first entry")
+        else:
+            #create request and catch the responses
+            payload = row[2]
+            resp = requests.post(url,data=payload)#atur parameter request disini(doc with requests)
+            result = resp.responses
+            if result >= 0.5:#sementara aja ini kalau resultnya dipasang treshold 0.5 dari 1
+                with open('responses-record.csv','a') as responses:
+                    csvWriter = csv.writer(responses)
+                    csvWriter.writerow([row[0],row[1],result])
     
 
-payload="dummy"#dummyload
-resp = requests.post(url,data=payload)
-
-
-
-resp_dict = resp.json()
-print(resp_dict["prediction"])
-
-with open('prediction_res', 'a') as f:
-    csv.writer#dummy load
