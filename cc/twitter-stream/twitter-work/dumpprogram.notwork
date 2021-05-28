@@ -1,0 +1,23 @@
+try:
+    customStream.filter(languages=['id'])#batas bahasa indonesia
+    #adding file csv
+    #filesave ='twitter_fetch'+(datetime.datetime.now().strftime("%Y-%m-%d %H:%M"))+'.csv'
+    filesave = 'twitter_fetch.csv'
+    #storing the tweet fetched
+    with open (filesave, 'a+', newline='') as csvFile:
+        csvWriter = csv.writer(csvFile)
+        for tweet in tweepy.Cursor(customStream).items():
+            tweets_encoded = tweet.text.encode('utf-8')
+            tweet_decoded = tweets_encoded.decode('utf-8')
+            csvWriter.writerow([datetime.datetime.now().strftime("%Y-%m-%d %H:%M"), tweet.user, tweet.author.name , tweet_decoded,tweet._json["user"]["location"]])
+except KeyboardInterrupt as e:
+    print("stopped")
+finally:
+    print('done')
+    customStream.disconnect()
+
+
+
+        with open(filesave, 'a+') as f:
+            writer = csv.writer(f)
+            writer.writerow([status.author.screen_name, status.created_at, status.text])
