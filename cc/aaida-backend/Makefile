@@ -11,4 +11,4 @@ clean:
 	@-rm -rf dist
 	
 test:
-	@go test ./...
+	@go test ./... -cover

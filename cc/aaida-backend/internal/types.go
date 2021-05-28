@@ -1,7 +1,6 @@
 package internal
 
-// MLResponse
-type MLResponse struct {
-	Class string  `json:"class"`
-	Score float32 `json:"score"`
+// Predictor
+type Predictor interface {
+	Predict([]string) ([]float32, error)
 }

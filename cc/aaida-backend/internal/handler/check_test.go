@@ -16,7 +16,7 @@ func TestCheckHandler(t *testing.T) {
 	}
 
 	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(Check)
+	handler := http.Handler(NewCheckHandler())
 
 	handler.ServeHTTP(rr, req)
 
