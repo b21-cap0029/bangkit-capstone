@@ -4,13 +4,13 @@ import os
 import os.path
 
 print(os.getcwd())
-workdir = os.chdir("..")#naik satu folder untuk ambil twitter-fetch
-print(workdir)
+#workdir = os.chdir("..")#naik satu folder untuk ambil twitter-fetch
+#print(workdir)
 url="localhost"#dummy load untuk setting request tensor
 
 
 #path = "E:\BANGKIT\Project\bangkit-capstone\cc\twitter-stream" ##belum bisa akses relative path sama belum bisa buat workpathnya(aulah)
-with open('twitter-fetch-dummy.csv','r') as f:
+with open('twitter_fetch.csv','r') as f:
     csvReader= csv.reader(f)
     line_counter=0
     for row in csvReader:
