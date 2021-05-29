@@ -7,7 +7,6 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"os"
 )
 
 // TFServingPredictor
@@ -18,7 +17,7 @@ type TFServingPredictor struct {
 }
 
 func NewDefaultTFServingPredictor() *TFServingPredictor {
-	host := os.Getenv("TENSORFLOW_SERVING_HOST")
+	host := TensorflowServingHost
 	if host == "" {
 		log.Panicln("TENSORFLOW_SERVING_HOST is unset")
 	}

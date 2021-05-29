@@ -6,7 +6,6 @@ import (
 	"log"
 	"net/http"
 	"net/url"
-	"os"
 	"regexp"
 	"strconv"
 
@@ -25,8 +24,8 @@ type CheckHandler struct {
 func NewCheckHandler() *CheckHandler {
 	// oauth2 configures a client that uses app credentials to keep a fresh token
 	config := &clientcredentials.Config{
-		ClientID:     os.Getenv("TWITTER_CLIENT_ID"),
-		ClientSecret: os.Getenv("TWITTER_CLIENT_SECRET"),
+		ClientID:     internal.TwitterClientId,
+		ClientSecret: internal.TwitterClientSecret,
 		TokenURL:     "https://api.twitter.com/oauth2/token",
 	}
 	// http.Client will automatically authorize Requests
