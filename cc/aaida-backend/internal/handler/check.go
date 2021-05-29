@@ -15,13 +15,25 @@ import (
 	"golang.org/x/oauth2/clientcredentials"
 )
 
+type StatusServiceShow interface {
+	Show(int64, *twitter.StatusShowParams) (*twitter.Tweet, *http.Response, error)
+}
+
 type CheckHandler struct {
 	predictor     internal.Predictor
-	twitterClient *twitter.Client
+	statusService StatusServiceShow
 	httpClient    *http.Client
 }
 
-func NewCheckHandler() *CheckHandler {
+func NewCheckHandler(predictor internal.Predictor, statusService StatusServiceShow, httpClient *http.Client) *CheckHandler {
+	return &CheckHandler{
+		predictor:     predictor,
+		statusService: statusService,
+		httpClient:    httpClient,
+	}
+}
+
+func NewDefaultCheckHandler() *CheckHandler {
 	// oauth2 configures a client that uses app credentials to keep a fresh token
 	config := &clientcredentials.Config{
 		ClientID:     internal.TwitterClientId,
@@ -34,11 +46,7 @@ func NewCheckHandler() *CheckHandler {
 	// Twitter client
 	client := twitter.NewClient(httpClient)
 
-	return &CheckHandler{
-		predictor:     internal.NewDefaultTFServingPredictor(),
-		twitterClient: client,
-		httpClient:    httpClient,
-	}
+	return NewCheckHandler(internal.NewDefaultTFServingPredictor(), client.Statuses, httpClient)
 }
 
 func (c *CheckHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -82,7 +90,7 @@ func (c *CheckHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		log.Panicln(err.Error())
 	}
 
-	tweet, _, err := c.twitterClient.Statuses.Show(tweetId, &twitter.StatusShowParams{
+	tweet, _, err := c.statusService.Show(tweetId, &twitter.StatusShowParams{
 		TweetMode: "extended",
 	})
 	if err != nil {
