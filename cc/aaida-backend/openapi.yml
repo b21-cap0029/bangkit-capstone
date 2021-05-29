@@ -1,0 +1,193 @@
+openapi: '3.0.3'
+info:
+  title: aaida-backend
+  version: '1.0.0-beta'
+servers:
+  - url: https://api.server.test/v1
+paths:
+  /health:
+    get:
+      responses:
+        '200':
+          description: Server health
+  /check:
+    get:
+      description: Check directly score of a tweet
+      parameters:
+        - name: url
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: classification and score
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - class
+                  - score
+                properties:
+                  class:
+                    type: string
+                  score:
+                    type: number
+              examples:
+                positive:
+                  summary: Positive example
+                  value:
+                    class: Positive
+                    score: 0.9
+                negative:
+                  summary: Negative example
+                  value:
+                    class: Negative
+                    score: 0.2
+  /profile:
+    get:
+      description: Profile data of authenticated user
+      responses:
+        '200':
+          description: User profile data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+    post:
+      description: Update profile data of authenticated user
+      requestBody:
+        description: Updated fields of profile data
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+            examples:
+              update_name:
+                summary: Updating profile's name
+                value:
+                  name: John Doe
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+
+  /profile/cases:
+    get:
+      description: Cases claimed by the authenticated user
+      responses:
+        '200':
+          description: List of Case data
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Case'
+
+  /profile/matched:
+    get:
+      description: Cases matched to the authenticated user
+      responses:
+        '200':
+          description: List of Case data
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Case'
+
+  /cases/{id}:
+    get:
+      description: Get Case data
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Case data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Case'
+
+  /cases/{id}/claim:
+    post:
+      description: Claim case
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+
+  /cases/{id}/skip:
+    post:
+      description: Skip case
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+
+  /cases/{id}/close:
+    post:
+      description: Close case
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+
+  # /tokensignin:
+  # https://developers.google.com/identity/sign-in/android/backend-auth
+  # Still need to implement signin
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        email:
+          type: string
+        name:
+          type: string
+        is_verified:
+          type: boolean
+    Case:
+      type: object
+      properties:
+        created_date:
+          type: string
+        tweet_id:
+          type: integer
+          format: int64
+        owner_id:
+          type: integer
+        is_claimed:
+          type: boolean
+        is_closed:
+          type: boolean
