@@ -25,6 +25,9 @@ func main() {
 func serveHTTP(bindAddress string) {
 	server := http.NewServeMux()
 	server.HandleFunc("/health", handler.Health)
-	server.HandleFunc("/check", handler.Check)
-	http.ListenAndServe(bindAddress, server)
+	server.Handle("/check", handler.NewDefaultCheckHandler())
+	err := http.ListenAndServe(bindAddress, server)
+	if err != nil {
+		log.Fatalln(err)
+	}
 }

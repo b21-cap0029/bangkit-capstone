@@ -1,5 +1,11 @@
 # aaida-backend
 
+## Required Environment Variables
+
+- `TWITTER_CLIENT_ID`
+- `TWITTER_CLIENT_SECRET`
+- `TENSORFLOW_SERVING_HOST`
+
 ## Run server locally
 
 ```bash

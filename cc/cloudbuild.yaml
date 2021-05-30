@@ -1,6 +1,9 @@
 steps:
 - name: 'gcr.io/cloud-builders/gsutil'
   args: ['cp', '-r', 'cc/k8s/*', 'gs://bangkit-aaida-kubernetes-manifests']
+- name: 'gcr.io/cloud-builders/go'
+  args: ['test', './...', '-cover']
+  dir: 'cc/aaida-backend'
 - name: 'gcr.io/cloud-builders/docker'
   args: ['build', '--tag=gcr.io/bangkit-aaida/aaida-backend:$TAG_NAME', './cc/aaida-backend']
 - name: 'gcr.io/cloud-builders/gsutil'
