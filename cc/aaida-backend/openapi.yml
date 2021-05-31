@@ -34,6 +34,7 @@ paths:
                     type: string
                   score:
                     type: number
+                    format: float
               examples:
                 positive:
                   summary: Positive example
@@ -161,6 +162,23 @@ paths:
           description: OK
         '400':
           description: Bad Request
+  
+  /cases/submit:
+    post:
+      description: Submit new cases (used by internal backend service)
+      requestBody:
+        description: Case data
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Case'
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '403':
+          description: Not authorized
 
   # /tokensignin:
   # https://developers.google.com/identity/sign-in/android/backend-auth
@@ -185,6 +203,11 @@ components:
         tweet_id:
           type: integer
           format: int64
+        class:
+          type: string
+        score:
+          type: number
+          format: float
         owner_id:
           type: integer
         is_claimed:
