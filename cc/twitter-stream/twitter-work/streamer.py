@@ -42,7 +42,7 @@ class Listener(StreamListener):
     def on_error(self, status_code):
         if status_code !=420:
             print(status_code)
-            return False #reconnect stream with 3 tries
+            return False
         else:
             return True
 
@@ -74,12 +74,3 @@ with open (filesave, 'w', newline='') as csvFile:
 #start streaming
 #customStream.sample(languages=["id"])
 customStream.filter(track=['Trump'],languages=["en","fr","es","id"])#batas bahasa indonesia wajib pakai track(APIKEYnya tidak dapat akses feed semua tweet)
-#pengerjaan parameter filternya disini
-
-#preparing for prediction request
-
-
-#catch the prediction responses
-
-
-#process the prediction

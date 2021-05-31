@@ -23,6 +23,6 @@ with open (filename,'r') as record:#tidak ada kewajiban menulis file csv
         resp = requests.post(url,json=payload)
         if resp.status_code != 200:
             print("record {} failed to sent".format(record_counter))
-        if record_counter == record_lenght:
+        if record_counter == record_lenght:##penanda end of record
             print("end of record")
         record_counter +=1
