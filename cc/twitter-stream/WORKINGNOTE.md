@@ -1,4 +1,4 @@
-sampai saat ini ada 3 program yang disiapka
+sampai saat ini ada 3 program yang disiapkan
 streamer.py:untuk menangani stream twitter sehingga menghasilkan file twitter_fetch.csv
 request-tf.py:untuk menangani hasil stream(twitter_fetch.csv) dan mengirimkan request prediction ke tensorflow-serving
 hasil akhir request-tf.py menghasilkan file responses-record.csv 
