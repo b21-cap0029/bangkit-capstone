@@ -74,5 +74,4 @@ with open (filesave, 'w', newline='') as csvFile:
 
 #start streaming
 #customStream.sample(languages=["id"])
-customStream.filter(track=['election','loser'],languages=["en","fr","es","id"])#batas bahasa indonesia wajib pakai track(APIKEYnya tidak dapat akses feed semua tweet)
-#filter track dalam list
+customStream.filter(track=['Trump'],languages=["en","fr","es","id"])#batas bahasa indonesia wajib pakai track(APIKEYnya tidak dapat akses feed semua tweet)
