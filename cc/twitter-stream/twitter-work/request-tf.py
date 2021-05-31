@@ -30,7 +30,7 @@ with open('twitter_fetch.csv','r') as f:
                     csvWriter = csv.writer(responses)
                     #create request and catch the responses prepare the requests
                     payload = {}
-                    payload["instances"] = row[2]
+                    payload["instances"] = [row[2]]
                     json_payload = json.dumps(payload)
                     #resp = requests.post(url,json=json_payload)#atur parameter request disini(doc with requests)
                     #result_dict = resp.json()  #ambil hasilnya dalam bentuk json. cari key response(hasil test dengan curl
