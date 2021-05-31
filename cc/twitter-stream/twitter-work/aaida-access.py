@@ -1,28 +1,40 @@
 import json
 import time
-import datetime
+from datetime import datetime
 import requests
 import csv
+import os
+import os.path
 
+print(os.getcwd())
 filename = 'responses-record.csv'
 url = 'localhost/cases/submit'#dummy load dengan HTTP-POST
 payload = {} #structure dasar payload
+treshold = 0.5 #defining treshold dari skor tensor 
 
-with open (filename,'r') as record:#tidak ada kewajiban menulis file csv
+with open ('responses-record.csv','r') as record:#tidak ada kewajiban menulis file csv
     record_counter = 0
     csvReader = csv.reader(record)
-    record_lenght = len(list(csvReader))
     for line in csvReader:
-        payload["created_date"] = datetime.datetime.now()
+        print(line)
+        now = datetime.now()#input waktu created
+        calendar = now.strftime("%d/%m/%Y %H:%M:%S")
+        print(calendar)
+        payload["created_date"] = calendar
         payload["tweet_id"] = 1## di twitter_fetch dan responses-record tidak ada tweet id DUMMYLOAD
-        payload["class"] = "DUMMY"#maksudnya class apa?
-        payload["score"] = line.row[2]
-        payload["owner_id"] = line.row[0]
+        if float(line[2]) >= treshold:
+            payload["class"] = "Teridentifikasi"
+        else:
+            payload["class"] = "tidak teridentifikasi"
+        payload["score"] = line[2]
+        payload["owner_id"] = line[0]
         payload["is_claimed"] = False
         payload["is_closed"] = False        
-        resp = requests.post(url,json=payload)
+        #resp = requests.post(url,json=payload)
+        print(dict(payload))#just test
+"""   
+ini kalau aaida-backend sudah siap
         if resp.status_code != 200:
             print("record {} failed to sent".format(record_counter))
-        if record_counter == record_lenght:##penanda end of record
-            print("end of record")
         record_counter +=1
+"""
