@@ -21,13 +21,13 @@ with open ('responses-record.csv','r') as record:#tidak ada kewajiban menulis fi
         calendar = now.strftime("%d/%m/%Y %H:%M:%S")
         print(calendar)
         payload["created_date"] = calendar
-        payload["tweet_id"] = 1## di twitter_fetch dan responses-record tidak ada tweet id DUMMYLOAD
-        if float(line[2]) >= treshold:
+        payload["tweet_id"] = line[2]# index[2] menyimpan tweet_id
+        if float(line[4]) >= treshold:#index[4] menyimpan score prediction
             payload["class"] = "Teridentifikasi"
         else:
             payload["class"] = "tidak teridentifikasi"
-        payload["score"] = line[2]
-        payload["owner_id"] = line[0]
+        payload["score"] = line[4]#index[4]menimpan score prediction
+        payload["owner_id"] = line[0]#index[0] menyimpan id_user
         payload["is_claimed"] = False
         payload["is_closed"] = False        
         #resp = requests.post(url,json=payload)

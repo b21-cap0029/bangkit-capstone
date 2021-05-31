@@ -1,18 +1,17 @@
 #prepare for dependencies from tweepy
 
-
-from API_KEY import CONSUMER_KEY
-from API_KEY import CONSUMER_SECRET
-from API_KEY import ACCESS_TOKEN
-from API_KEY import ACCESS_TOKEN_SECRET
-import tweepy
-from tweepy import Stream
-from tweepy import OAuthHandler
-from tweepy.streaming import StreamListener
-import time
-import json
-import datetime
+import sys
+sys.path.append('/.../twitter-work')
+import os
 import csv
+import datetime
+import json
+import time
+import tweepy
+from API_KEY import (ACCESS_TOKEN, ACCESS_TOKEN_SECRET, CONSUMER_KEY,
+                     CONSUMER_SECRET)
+from tweepy import OAuthHandler, Stream
+from tweepy.streaming import StreamListener
 
 ##set boundary entries
 language = ['id']
@@ -51,13 +50,14 @@ class Listener(StreamListener):
         json_tweet = json.loads(data)
         print(json_tweet)
         tweet = {'id':json_tweet['user']['id_str'],'screenName':json_tweet['user']['screen_name'],'text:':json_tweet['text']}
-        id = json_tweet['user']['id_str']
+        id_user = json_tweet['user']['id_str']
+        id_tweet = json_tweet['id']
         name = json_tweet['user']['screen_name']
         text_tweet = json_tweet['text']
         print(text_tweet)
         with open(filesave,'a', newline='') as f:
             csvWriter = csv.writer(f)
-            csvWriter.writerow([id,name,text_tweet])
+            csvWriter.writerow([id_user,name,id_tweet,text_tweet])
 
 
 
@@ -70,7 +70,7 @@ customStream = Stream(auth, listener = customListener)
 #BEWARE karena disini pakai mode W potensi ilang, ubah modenya untuk siap PROD
 with open (filesave, 'w', newline='') as csvFile:
     csvWriter = csv.writer(csvFile)
-    csvWriter.writerow(['ID_STR', 'USERNAME','TWEET_TEXT'])
+    csvWriter.writerow(['ID_USER', 'USERNAME','ID_TWEET','TWEET_TEXT'])
 
 #start streaming
 #customStream.sample(languages=["id"])

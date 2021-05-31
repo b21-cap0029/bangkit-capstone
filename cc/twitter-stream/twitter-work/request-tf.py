@@ -27,8 +27,8 @@ with open('twitter_fetch.csv','r') as f:
             print("this is first entry")
         else:
             #CREATE REQUEST AND PAYLOAD FOR TENSOR HERE
-            print(row[2])
-            data_input = row[2]
+            print(row[3])
+            data_input = row[3]
             request_input = {'instances':[[data_input]]}
             print(request_input)
             json_dumps = json.dumps(request_input)
@@ -49,7 +49,7 @@ with open('twitter_fetch.csv','r') as f:
                 print("ada masukan ke aaida-backend")#verbose just test in text
                 with open(fileresponse,'a',newline='') as responses:
                     csvWriter = csv.writer(responses)
-                    print(row[0],row[1],row[2],result)#verbose all record(id_str,username,tweet_text dan prediction score)
+                    print(row[0],row[1],row[2],row[3],result)#verbose all record(id_str,username,id_tweet,tweet_text, dan prediction score)
                     #csvWriter.writerow([row[0],row[1],result]) #opsi dengan line ini hanya menyimpan id_str,username, dan prediction score
             else:
                 print("tidak ada isinya")#verbose mode
