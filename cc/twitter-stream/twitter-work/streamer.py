@@ -49,7 +49,6 @@ class Listener(StreamListener):
     def on_data(self, data):
         json_tweet = json.loads(data)
         print(json_tweet)
-        tweet = {'id':json_tweet['user']['id_str'],'screenName':json_tweet['user']['screen_name'],'text:':json_tweet['text']}
         id_user = json_tweet['user']['id_str']
         id_tweet = json_tweet['id']
         name = json_tweet['user']['screen_name']
