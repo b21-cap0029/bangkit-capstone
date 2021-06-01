@@ -1,0 +1,15 @@
+untuk menjalankan layanan yang ada. Gunakan layanan Kubernetes untuk menjalankan Deployments dan Services yang terdapat di folder ../cc/k8s  
+pastikan firewall dapat menerima komunikasi masuk ke services yang ada di kubernetes cluster  
+pastikan console yang digunakan dapat melakukan komunikasi ke cluster kubernetes yang digunakan  
+setelah kubernetes cluster berjalan, apply Deployments dan Services yang ada di setiap folder ../cc/k8s
+'''
+kubectl apply -f <nama_folder>/<nama_file>.yaml  
+'''
+
+setelah itu dapatkan IP services yang di-assign 
+'''
+kubectl get services
+'''
+
+IP dan Port yang muncul dari tensorflow-serving dan aaida-backend digunakan untuk program request-tf.py dan aaida-access.py secara berurutan (program di dalam ../cc/twitter-stream)
+jalankan program yang ada di dalam folder twitter-stream(panduan terdapat di dalam folder tersebut)  
