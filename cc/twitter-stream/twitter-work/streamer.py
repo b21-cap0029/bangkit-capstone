@@ -13,6 +13,8 @@ import tweepy
 #                     CONSUMER_SECRET) failsafe dengan API_KEY.py
 from tweepy import OAuthHandler, Stream
 from tweepy.streaming import StreamListener
+from dotenv import load_dotenv
+load_dotenv()
 
 ##set boundary entries
 language = ['id']
