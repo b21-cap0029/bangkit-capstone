@@ -58,12 +58,14 @@ func (c *CheckHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	var err error
 	if tweetUrlStr == "" {
 		err = fmt.Errorf("url parameter is required")
-		log.Panicln(err.Error())
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
 	}
 
 	tweetUrl, err := url.Parse(tweetUrlStr)
 	if err != nil {
-		log.Panicln(err.Error())
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
 	}
 
 	switch tweetUrl.Hostname() {
@@ -71,10 +73,12 @@ func (c *CheckHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	case "t.co":
 		// TODO try to resolve redirect url
 		err = fmt.Errorf("%v is not twitter url", tweetUrl.Hostname())
-		log.Panicln(err.Error())
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
 	default:
 		err = fmt.Errorf("%v is not twitter url", tweetUrl.Hostname())
-		log.Panicln(err.Error())
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
 	}
 
 	re := regexp.MustCompile(`/status/(\d+)`)
@@ -82,12 +86,14 @@ func (c *CheckHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	if len(matches) < 2 {
 		err = fmt.Errorf("%v is not a status path", tweetUrl.EscapedPath())
-		log.Panicln(err.Error())
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
 	}
 
 	tweetId, err := strconv.ParseInt(matches[1], 10, 64)
 	if err != nil {
-		log.Panicln(err.Error())
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
 	}
 
 	tweet, _, err := c.statusService.Show(tweetId, &twitter.StatusShowParams{
