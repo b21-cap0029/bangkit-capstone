@@ -200,6 +200,9 @@ components:
       properties:
         created_date:
           type: string
+        twitter_user_id:
+          type: integer
+          format: int64
         tweet_id:
           type: integer
           format: int64
