@@ -1,6 +1,5 @@
 #prepare for dependencies from tweepy
 
-from posix import environ
 import sys
 sys.path.append('/.../twitter-work')
 import os
@@ -9,8 +8,8 @@ import datetime
 import json
 import time
 import tweepy
-#from API_KEY import (ACCESS_TOKEN, ACCESS_TOKEN_SECRET, CONSUMER_KEY,
-#                     CONSUMER_SECRET) failsafe dengan API_KEY.py
+from API_KEY import (ACCESS_TOKEN, ACCESS_TOKEN_SECRET, CONSUMER_KEY,
+                     CONSUMER_SECRET)
 from tweepy import OAuthHandler, Stream
 from tweepy.streaming import StreamListener
 
@@ -19,10 +18,6 @@ language = ['id']
 #coordinates = []
 #filesave ='twitter_fetch'+(datetime.datetime.now().strftime("%Y-%m-%d %H:%M"))+'.csv'
 filesave = 'twitter_fetch.csv'
-ACCESS_TOKEN = os.environ.get('ACCESS_TOKEN')
-ACCESS_TOKEN_SECRET = os.environ.get('ACCESS_TOKEN_SECRET')
-CONSUMER_KEY = os.environ.get('CONSUMER_KEY')
-CONSUMER_SECRET = os.environ.get('CONSUMER_SECRET')
 #authentication to twitter
 auth = OAuthHandler(CONSUMER_KEY,CONSUMER_SECRET)
 auth.set_access_token(ACCESS_TOKEN,ACCESS_TOKEN_SECRET)
