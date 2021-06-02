@@ -5,7 +5,8 @@ import (
 	"log"
 	"net/http"
 
-	handler "github.com/b21-cap0029/bangkit-capstone/cc/aaida-backend/internal/handler"
+	"github.com/b21-cap0029/bangkit-capstone/cc/aaida-backend/internal/handler"
+	"github.com/b21-cap0029/bangkit-capstone/cc/aaida-backend/internal/models"
 )
 
 const (
@@ -26,7 +27,13 @@ func serveHTTP(bindAddress string) {
 	server := http.NewServeMux()
 	server.HandleFunc("/health", handler.Health)
 	server.Handle("/check", handler.NewDefaultCheckHandler())
-	err := http.ListenAndServe(bindAddress, server)
+
+	err := models.ConnectDataBase()
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	err = http.ListenAndServe(bindAddress, server)
 	if err != nil {
 		log.Fatalln(err)
 	}
