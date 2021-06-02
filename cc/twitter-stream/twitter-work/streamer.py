@@ -12,8 +12,7 @@ from API_KEY import (ACCESS_TOKEN, ACCESS_TOKEN_SECRET, CONSUMER_KEY,
                      CONSUMER_SECRET)
 from tweepy import OAuthHandler, Stream
 from tweepy.streaming import StreamListener
-from dotenv import load_dotenv
-load_dotenv()
+
 
 ##set boundary entries
 language = ['id']

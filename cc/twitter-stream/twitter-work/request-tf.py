@@ -45,7 +45,7 @@ with open('twitter_fetch.csv','r') as f:
             result = result_list[0]
             print(result_list)
             print(result)
-            if result >= 0.5:#sementara aja ini kalau resultnya dipasang treshold 0.5 dari 1
+            if result >= 0.936:#sementara aja ini kalau resultnya dipasang treshold 0.5 dari 1
                 print("ada masukan ke aaida-backend")#verbose just test in text
                 with open(fileresponse,'a',newline='') as responses:
                     csvWriter = csv.writer(responses)

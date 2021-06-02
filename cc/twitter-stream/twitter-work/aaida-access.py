@@ -10,7 +10,7 @@ print(os.getcwd())
 filename = 'responses-record.csv'
 url = 'localhost/cases/submit'#dummy load dengan HTTP-POST
 payload = {} #structure dasar payload
-treshold = 0.5 #defining treshold dari skor tensor 
+treshold = 0.936 #defining treshold dari skor tensor 
 
 with open ('responses-record.csv','r') as record:#tidak ada kewajiban menulis file csv
     record_counter = 0
@@ -27,7 +27,8 @@ with open ('responses-record.csv','r') as record:#tidak ada kewajiban menulis fi
         else:
             payload["class"] = "tidak teridentifikasi"
         payload["score"] = line[4]#index[4]menimpan score prediction
-        payload["owner_id"] = line[0]#index[0] menyimpan id_user
+        payload["twitter_user_id"] = line[0]#menyimpan id twitter user
+        payload["owner_id"] = 0 #dummy values
         payload["is_claimed"] = False
         payload["is_closed"] = False        
         #resp = requests.post(url,json=payload)
