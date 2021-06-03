@@ -8,6 +8,6 @@ import (
 )
 
 func TestNewDefaultTFServingPredictorPanic(t *testing.T) {
-	TensorflowServingHost = ""
+	TensorflowBaseURL = ""
 	assert.Panics(t, func() { NewDefaultTFServingPredictor() }, "the code didn't panic")
 }
