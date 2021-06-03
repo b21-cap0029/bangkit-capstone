@@ -1,6 +1,6 @@
 FROM golang:alpine
 
-RUN apk add make
+RUN apk add make gcc musl-dev
 
 ADD . /go/src/
 WORKDIR /go/src/

@@ -16,6 +16,7 @@ func ConnectDataBase() error {
 	var err error
 
 	postgresDsn := os.Getenv("POSTGRES_DSN")
+
 	if postgresDsn != "" {
 		db, err = gorm.Open(postgres.Open(postgresDsn), &gorm.Config{})
 	} else {
