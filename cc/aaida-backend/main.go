@@ -45,6 +45,8 @@ func serveHTTP(bindAddress string) {
 
 	subProfile := router.PathPrefix("/profile").Subrouter()
 	subProfile.Handle("/", handler.NewDefaultProfileHandler())
+	subProfile.Handle("/cases", handler.NewDefaultProfileCasesHandler())
+	subProfile.Handle("/matched", handler.NewDefaultProfileMatchedHandler())
 
 	n := negroni.Classic()
 	n.UseHandler(router)
