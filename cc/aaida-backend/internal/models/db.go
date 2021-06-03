@@ -16,6 +16,11 @@ func ConnectDataBase() error {
 	var err error
 
 	postgresDsn := os.Getenv("POSTGRES_DSN")
+
+	if postgresDsn == "" {
+		postgresDsn, _ = TryContructDSNFromCloudRun()
+	}
+
 	if postgresDsn != "" {
 		db, err = gorm.Open(postgres.Open(postgresDsn), &gorm.Config{})
 	} else {
@@ -64,4 +69,31 @@ func FindUserWithLeastUnclosedClaim(db *gorm.DB) (User, error) {
 	}
 
 	return user, nil
+}
+
+func TryContructDSNFromCloudRun() (string, error) {
+	var (
+		dbUser                 = os.Getenv("DB_USER")                  // e.g. 'my-db-user'
+		dbPwd                  = os.Getenv("DB_PASS")                  // e.g. 'my-db-password'
+		instanceConnectionName = os.Getenv("INSTANCE_CONNECTION_NAME") // e.g. 'project:region:instance'
+		dbName                 = os.Getenv("DB_NAME")                  // e.g. 'my-database'
+	)
+
+	if dbUser == "" {
+		return "", fmt.Errorf("missing DB_USER")
+	} else if dbPwd == "" {
+		return "", fmt.Errorf("missing DB_PASS")
+	} else if instanceConnectionName == "" {
+		return "", fmt.Errorf("missing INSTANCE_CONNECTION_NAME")
+	} else if dbName == "" {
+		return "", fmt.Errorf("missing DB_NAME")
+	}
+
+	socketDir, isSet := os.LookupEnv("DB_SOCKET_DIR")
+	if !isSet {
+		socketDir = "/cloudsql"
+	}
+
+	dbURI := fmt.Sprintf("user=%s password=%s database=%s host=%s/%s", dbUser, dbPwd, dbName, socketDir, instanceConnectionName)
+	return dbURI, nil
 }
