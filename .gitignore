@@ -468,3 +468,12 @@ hs_err_pid*
 !/gradle/wrapper/gradle-wrapper.jar
 
 # End of https://www.toptal.com/developers/gitignore/api/intellij+all,vim,python,jupyternotebooks,android,androidstudio
+cc/twitter-stream/notes.md
+cc/twitter-stream/notes.md
+cc/twitter-stream/twitter-work/token.py
+cc/twitter-stream/twitter-work/API_KEY.py
+cc/twitter-stream/twitter_fetch.csv
+cc/twitter-stream/twitter-work/.env
+cc/twitter-stream/twitter-work/dumper-load.py
+cc/twitter-stream/twitter_fetch-dummy.csv
+cc/twitter-stream/twitter_fetch-dummy.json
