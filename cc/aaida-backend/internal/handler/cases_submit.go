@@ -3,7 +3,6 @@ package handler
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 
 	"gorm.io/gorm"
@@ -70,8 +69,6 @@ func (c *CasesSubmitHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, tx.Error.Error(), http.StatusInternalServerError)
 			return
 		}
-
-		log.Printf("dbg: %v", tx.RowsAffected)
 
 		// TODO Notify
 	}

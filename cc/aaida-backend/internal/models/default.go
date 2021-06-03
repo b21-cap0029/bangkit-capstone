@@ -1,5 +1,5 @@
 package models
 
 type DefaultModel struct {
-	ID uint `json:"id" gorm:"primary_key"`
+	ID int64 `json:"id" gorm:"primary_key"`
 }

@@ -99,7 +99,7 @@ func TestCasesSubmit(t *testing.T) {
 	var returnedCaseObj models.Case
 	json.Unmarshal(rr.Body.Bytes(), &returnedCaseObj)
 
-	assert.Equal(t, uint(1), returnedCaseObj.ID, "Should be equal")
+	assert.Equal(t, int64(1), returnedCaseObj.ID, "Should be equal")
 }
 
 func TestCasesSubmitNoUser(t *testing.T) {
@@ -221,6 +221,12 @@ func TestCasesSubmitMatchmaking(t *testing.T) {
 
 	var newCaseObj models.Case
 	mockDB.Preload("Owner").Find(&newCaseObj)
-	assert.Equal(t, mockUser.ID, newCaseObj.OwnerID, "Should be equal")
+
+	ownerId, err := newCaseObj.OwnerID.Value()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	assert.Equal(t, mockUser.ID, ownerId, "Should be equal")
 	assert.Equal(t, &mockUser, newCaseObj.Owner, "Should be equal")
 }

@@ -5,6 +5,7 @@ import (
 
 	. "github.com/b21-cap0029/bangkit-capstone/cc/aaida-backend/internal/models"
 	"github.com/stretchr/testify/assert"
+	"gopkg.in/guregu/null.v4"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
@@ -118,7 +119,7 @@ func TestFindUserWithLeastUnclosedClaimFound(t *testing.T) {
 	}
 
 	tx = mockDB.Create(&[]Case{
-		{TwitterUserID: 1, TweetID: 1, Class: "Positive", Score: 0.6, OwnerID: userMock.ID},
+		{TwitterUserID: 1, TweetID: 1, Class: "Positive", Score: 0.6, OwnerID: null.IntFrom(userMock.ID)},
 		{TwitterUserID: 1, TweetID: 2, Class: "Positive", Score: 0.8},
 	})
 	if tx.Error != nil {
@@ -154,9 +155,9 @@ func TestFindUserWithLeastUnclosedClaimFoundLeast(t *testing.T) {
 	}
 
 	tx = mockDB.Create(&[]Case{
-		{TwitterUserID: 1, TweetID: 1, Class: "Positive", Score: 0.6, OwnerID: usersMock[0].ID},
-		{TwitterUserID: 2, TweetID: 2, Class: "Positive", Score: 0.8, OwnerID: usersMock[1].ID},
-		{TwitterUserID: 3, TweetID: 3, Class: "Positive", Score: 0.9, OwnerID: usersMock[0].ID},
+		{TwitterUserID: 1, TweetID: 1, Class: "Positive", Score: 0.6, OwnerID: null.IntFrom(usersMock[0].ID)},
+		{TwitterUserID: 2, TweetID: 2, Class: "Positive", Score: 0.8, OwnerID: null.IntFrom(usersMock[1].ID)},
+		{TwitterUserID: 3, TweetID: 3, Class: "Positive", Score: 0.9, OwnerID: null.IntFrom(usersMock[0].ID)},
 	})
 	if tx.Error != nil {
 		t.Fatal(tx.Error)

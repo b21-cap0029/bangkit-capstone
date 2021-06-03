@@ -48,7 +48,7 @@ func FindUserWithLeastUnclosedClaim(db *gorm.DB) (User, error) {
 
 	tx := db.Model(&User{})
 	tx = tx.Select("users.id, count(cases.id) as count")
-	tx = tx.Joins("left join `cases` on users.id = cases.owner_id")
+	tx = tx.Joins(`left join "cases" on users.id = cases.owner_id`)
 	tx = tx.Group("users.id").Order("count asc").Scan(&results)
 	if tx.Error != nil {
 		return User{}, tx.Error
