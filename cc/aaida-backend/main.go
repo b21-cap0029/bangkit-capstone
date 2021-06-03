@@ -35,7 +35,11 @@ func serveHTTP(bindAddress string) {
 	router := mux.NewRouter()
 	router.HandleFunc("/health", handler.Health)
 	router.Handle("/check", handler.NewDefaultCheckHandler())
-	router.Handle("/cases/submit", handler.NewDefaultCasesSubmitHandler())
+
+	s := router.PathPrefix("/cases/").Subrouter()
+	s.Handle("/submit", handler.NewDefaultCasesSubmitHandler())
+	s.Handle("/{id:[0-9]+}", handler.NewDefaultCasesHandler())
+	s.Handle("/{id:[0-9]+}/claim", handler.NewDefaultCasesClaimHandler())
 
 	n := negroni.Classic()
 	n.UseHandler(router)
