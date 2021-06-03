@@ -24,30 +24,37 @@ func NewCasesHandler(db *gorm.DB) *CasesHandler {
 }
 
 func (c *CasesHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
+	caseObj, err := FindCase(c.db, w, r)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
 	jsonEnc := json.NewEncoder(w)
+	jsonEnc.Encode(caseObj)
+}
+
+func FindCase(db *gorm.DB, w http.ResponseWriter, r *http.Request) (models.Case, error) {
+	vars := mux.Vars(r)
 	var caseObj models.Case
 
 	idStr, exist := vars["id"]
 
 	if !exist {
 		err := fmt.Errorf("id parameter is required")
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
+		return models.Case{}, err
 	}
 
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
+		return models.Case{}, err
 	}
 
-	tx := c.db.Where("id = ?", id).First(&caseObj)
+	tx := db.Where("id = ?", id).First(&caseObj)
 
 	if tx.Error != nil {
-		http.Error(w, tx.Error.Error(), http.StatusBadRequest)
-		return
+		return models.Case{}, tx.Error
 	}
 
-	jsonEnc.Encode(caseObj)
+	return caseObj, nil
 }
