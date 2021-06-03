@@ -3,6 +3,7 @@ package handler
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 
 	"gorm.io/gorm"
@@ -10,19 +11,15 @@ import (
 	"github.com/b21-cap0029/bangkit-capstone/cc/aaida-backend/internal/models"
 )
 
-type DBCreator interface {
-	Create(interface{}) *gorm.DB
-}
-
 type CasesSubmitHandler struct {
-	db DBCreator
+	db *gorm.DB
 }
 
 func NewDefaultCasesSubmitHandler() *CasesSubmitHandler {
 	return NewCasesSubmitHandler(models.DB)
 }
 
-func NewCasesSubmitHandler(db DBCreator) *CasesSubmitHandler {
+func NewCasesSubmitHandler(db *gorm.DB) *CasesSubmitHandler {
 	return &CasesSubmitHandler{db: db}
 }
 
@@ -51,13 +48,33 @@ func (c *CasesSubmitHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	user, err := models.FindUserWithLeastUnclosedClaim(c.db)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
 	result := c.db.Create(&caseObj)
 	if result.Error != nil {
 		http.Error(w, result.Error.Error(), http.StatusBadRequest)
 		return
 	}
 
-	// TODO Matchmaking and notify user
+	duplicates := models.FindCasesWithTwitterUserID(c.db, caseObj.TwitterUserID)
+
+	// Matchmaking
+	if len(duplicates) == 1 {
+		caseObj.Owner = &user
+		tx := c.db.Save(&caseObj)
+		if tx.Error != nil {
+			http.Error(w, tx.Error.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		log.Printf("dbg: %v", tx.RowsAffected)
+
+		// TODO Notify
+	}
 
 	jsonEnc.Encode(caseObj)
 }

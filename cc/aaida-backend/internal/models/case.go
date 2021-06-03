@@ -2,8 +2,6 @@ package models
 
 import (
 	"time"
-
-	"gopkg.in/guregu/null.v4"
 )
 
 type Case struct {
@@ -13,7 +11,7 @@ type Case struct {
 	TweetID       int64     `json:"tweet_id" gorm:"unique:not null"`
 	Class         string    `json:"class" gorm:"not null"`
 	Score         float32   `json:"score" gorm:"not null"`
-	OwnerID       null.Int  `json:"owner_id"`
+	OwnerID       uint      `json:"owner_id"`
 	Owner         *User     `json:"-" gorm:"foreignKey:OwnerID"`
 	IsClaimed     bool      `json:"is_claimed" gorm:"default:false"`
 	IsClosed      bool      `json:"is_closed" gorm:"default:false"`
