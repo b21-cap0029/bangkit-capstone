@@ -49,8 +49,8 @@ with open('twitter_fetch.csv','r') as f:
                 print("ada masukan ke aaida-backend")#verbose just test in text
                 with open(fileresponse,'a',newline='') as responses:
                     csvWriter = csv.writer(responses)
-                    print(row[0],row[1],row[2],row[3],result)#verbose all record(id_str,username,id_tweet,tweet_text, dan prediction score)
-                    #csvWriter.writerow([row[0],row[1],result]) #opsi dengan line ini hanya menyimpan id_str,username, dan prediction score
+                    print(row[0],row[1],row[2],row[3],result)#verbose all record(id_str,username,id_tweet,tweet_text, dan prediction score)(print only)
+                    csvWriter.writerow([row[0],row[1],row[2],row[3],result]) 
             else:
                 print("tidak ada isinya")#verbose mode
     

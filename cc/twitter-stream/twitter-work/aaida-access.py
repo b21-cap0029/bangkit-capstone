@@ -8,7 +8,7 @@ import os.path
 
 print(os.getcwd())
 filename = 'responses-record.csv'
-url = 'localhost/cases/submit'#dummy load dengan HTTP-POST
+url = 'https://aaida-backend-4tl56tjpnq-as.a.run.app/cases/submit'#dummy load dengan HTTP-POST
 payload = {} #structure dasar payload
 treshold = 0.936 #defining treshold dari skor tensor 
 
@@ -21,17 +21,18 @@ with open ('responses-record.csv','r') as record:#tidak ada kewajiban menulis fi
         calendar = now.strftime("%d/%m/%Y %H:%M:%S")
         print(calendar)
         payload["created_date"] = calendar
-        payload["tweet_id"] = line[2]# index[2] menyimpan tweet_id
+        payload["tweet_id"] = int(line[2])# index[2] menyimpan tweet_id
         if float(line[4]) >= treshold:#index[4] menyimpan score prediction
             payload["class"] = "Teridentifikasi"
         else:
             payload["class"] = "tidak teridentifikasi"
-        payload["score"] = line[4]#index[4]menimpan score prediction
-        payload["twitter_user_id"] = line[0]#menyimpan id twitter user
+        payload["score"] = float(line[4])#index[4]menimpan score prediction
+        payload["twitter_user_id"] = int(line[0])#menyimpan id twitter user
         payload["owner_id"] = 0 #dummy values
         payload["is_claimed"] = False
         payload["is_closed"] = False        
-        #resp = requests.post(url,json=payload)
+        resp = requests.post(url,json=payload)
+        print(resp.status_code)
         print(dict(payload))#just test
 """   
 ini kalau aaida-backend sudah siap
