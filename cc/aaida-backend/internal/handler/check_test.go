@@ -29,7 +29,7 @@ func (s *StatusServiceMock) Show(id int64, params *twitter.StatusShowParams) (*t
 	return args.Get(0).(*twitter.Tweet), args.Get(1).(*http.Response), args.Error(2)
 }
 
-func TestCheckHandler(t *testing.T) {
+func TestCheckHandlerSuccess(t *testing.T) {
 	// https://twitter.com/idwiki/status/1391607030255816704
 	text := `"Usia 25 tahun idealnya seperti apa?"
 
@@ -62,12 +62,22 @@ Mau di usia berapa pun, semoga kamu bahagia selalu.`
 
 	handler.ServeHTTP(rr, req)
 
-	if status := rr.Code; status != http.StatusOK {
-		t.Errorf("handler returned wrong status code: got %v want %v",
-			status, http.StatusOK)
-	}
-
 	assert.Equal(t, http.StatusOK, rr.Code, "Should be equal")
 	assert.Equal(t, "{\"class\":\"Negative\",\"score\":0.0004786849}\n",
 		rr.Body.String(), "Should be equal")
+}
+
+func TestCheckHandlerNoURL(t *testing.T) {
+	req, err := http.NewRequest("GET", "/check", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	rr := httptest.NewRecorder()
+	handler := http.Handler(NewCheckHandler(nil, nil, nil))
+
+	handler.ServeHTTP(rr, req)
+
+	assert.Equal(t, http.StatusBadRequest, rr.Code, "Should be equal")
+	assert.Equal(t, "url parameter is required\n", rr.Body.String(), "Should be equal")
 }

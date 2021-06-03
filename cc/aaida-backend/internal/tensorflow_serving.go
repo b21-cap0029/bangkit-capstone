@@ -11,22 +11,22 @@ import (
 
 // TFServingPredictor
 type TFServingPredictor struct {
-	host,
+	baseURL,
 	modelName,
 	modelVersion string
 }
 
 func NewDefaultTFServingPredictor() *TFServingPredictor {
-	host := TensorflowServingHost
-	if host == "" {
-		log.Panicln("TENSORFLOW_SERVING_HOST is unset")
+	baseURL := TensorflowBaseURL
+	if baseURL == "" {
+		log.Panicln("TENSORFLOW_BASE_URL is unset")
 	}
-	return NewTFServingPredictor(host, "model", "1")
+	return NewTFServingPredictor(baseURL, "model", "1")
 }
 
-func NewTFServingPredictor(host, modelName, modelVersion string) *TFServingPredictor {
+func NewTFServingPredictor(baseURL, modelName, modelVersion string) *TFServingPredictor {
 	return &TFServingPredictor{
-		host:         host,
+		baseURL:      baseURL,
 		modelName:    modelName,
 		modelVersion: modelVersion,
 	}
@@ -45,7 +45,7 @@ func (t *TFServingPredictor) Predict(texts []string) ([]float32, error) {
 	}
 
 	resp, err := http.Post(
-		fmt.Sprintf("http://%s:8501/v%s/models/%s:predict", t.host, t.modelVersion, t.modelName),
+		fmt.Sprintf("%s/v%s/models/%s:predict", t.baseURL, t.modelVersion, t.modelName),
 		"application/json",
 		bytes.NewBuffer(reqBody))
 	if err != nil {
