@@ -12,7 +12,7 @@ fileresponse = 'responses-record.csv'# file response
 
 
 #Persiapan Requests API
-url="http://34.67.54.143:8501/v1/models/model:predict"#dummy load untuk setting request tensor 
+url="https://tensorflow-serving-4tl56tjpnq-as.a.run.app/v1/models/model:predict"#dummy load untuk setting request tensor 
 payload = {}
 #REQUEST BUILDER
 
