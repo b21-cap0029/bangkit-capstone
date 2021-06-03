@@ -18,8 +18,7 @@ with open ('responses-record.csv','r') as record:#tidak ada kewajiban menulis fi
     for line in csvReader:
         print(line)
         now = datetime.now()#input waktu created
-        calendar = now.strftime("%d/%m/%Y %H:%M:%S")
-        print(calendar)
+        calendar = now.isoformat()
         payload["created_date"] = calendar
         payload["tweet_id"] = int(line[2])# index[2] menyimpan tweet_id
         if float(line[4]) >= treshold:#index[4] menyimpan score prediction
@@ -31,9 +30,9 @@ with open ('responses-record.csv','r') as record:#tidak ada kewajiban menulis fi
         payload["owner_id"] = 0 #dummy values
         payload["is_claimed"] = False
         payload["is_closed"] = False        
+        print(dict(payload)) #just test
         resp = requests.post(url,json=payload)
-        print(resp.status_code)
-        print(dict(payload))#just test
+        print(f'{resp.status_code=} {resp.text=}')
 """   
 ini kalau aaida-backend sudah siap
         if resp.status_code != 200:
