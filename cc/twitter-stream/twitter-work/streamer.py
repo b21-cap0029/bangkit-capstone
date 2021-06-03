@@ -38,6 +38,12 @@ def pre_process(text):
     # remove links
     text = re.sub("https://t.co/\S*","",text) 
 
+    #remove @<blabla>
+    text = re.sub("\@\S+","",text)
+
+    #remove RT marker
+    text = re.sub("RT","",text)
+
     # remove newline
     text = re.sub("\n","",text)
 
