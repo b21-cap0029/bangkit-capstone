@@ -36,12 +36,15 @@ func serveHTTP(bindAddress string) {
 	router.HandleFunc("/health", handler.Health)
 	router.Handle("/check", handler.NewDefaultCheckHandler())
 
-	s := router.PathPrefix("/cases/").Subrouter()
-	s.Handle("/submit", handler.NewDefaultCasesSubmitHandler())
-	s.Handle("/{id:[0-9]+}", handler.NewDefaultCasesHandler())
-	s.Handle("/{id:[0-9]+}/claim", handler.NewDefaultCasesClaimHandler())
-	s.Handle("/{id:[0-9]+}/skip", handler.NewDefaultCasesSkipHandler())
-	s.Handle("/{id:[0-9]+}/close", handler.NewDefaultCasesCloseHandler())
+	subCases := router.PathPrefix("/cases/").Subrouter()
+	subCases.Handle("/submit", handler.NewDefaultCasesSubmitHandler())
+	subCases.Handle("/{id:[0-9]+}", handler.NewDefaultCasesHandler())
+	subCases.Handle("/{id:[0-9]+}/claim", handler.NewDefaultCasesClaimHandler())
+	subCases.Handle("/{id:[0-9]+}/skip", handler.NewDefaultCasesSkipHandler())
+	subCases.Handle("/{id:[0-9]+}/close", handler.NewDefaultCasesCloseHandler())
+
+	subProfile := router.PathPrefix("/profile").Subrouter()
+	subProfile.Handle("/", handler.NewDefaultProfileHandler())
 
 	n := negroni.Classic()
 	n.UseHandler(router)
