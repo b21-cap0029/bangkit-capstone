@@ -8,19 +8,19 @@ import (
 	"gorm.io/gorm"
 )
 
-type CasesClaimHandler struct {
+type CasesCloseHandler struct {
 	db *gorm.DB
 }
 
-func NewDefaultCasesClaimHandler() *CasesClaimHandler {
-	return NewCasesClaimHandler(models.DB)
+func NewDefaultCasesCloseHandler() *CasesCloseHandler {
+	return NewCasesCloseHandler(models.DB)
 }
 
-func NewCasesClaimHandler(db *gorm.DB) *CasesClaimHandler {
-	return &CasesClaimHandler{db: db}
+func NewCasesCloseHandler(db *gorm.DB) *CasesCloseHandler {
+	return &CasesCloseHandler{db: db}
 }
 
-func (c *CasesClaimHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (c *CasesCloseHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	var err error
 	if r.Method != "POST" {
 		err = fmt.Errorf("only POST method allowed")
@@ -34,12 +34,12 @@ func (c *CasesClaimHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if caseObj.IsClaimed {
+	if caseObj.IsClosed {
 		err = fmt.Errorf("case has already claimed")
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	caseObj.IsClaimed = true
+	caseObj.IsClosed = true
 	c.db.Save(caseObj)
 }

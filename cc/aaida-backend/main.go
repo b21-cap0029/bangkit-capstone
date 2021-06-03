@@ -40,6 +40,8 @@ func serveHTTP(bindAddress string) {
 	s.Handle("/submit", handler.NewDefaultCasesSubmitHandler())
 	s.Handle("/{id:[0-9]+}", handler.NewDefaultCasesHandler())
 	s.Handle("/{id:[0-9]+}/claim", handler.NewDefaultCasesClaimHandler())
+	s.Handle("/{id:[0-9]+}/skip", handler.NewDefaultCasesSkipHandler())
+	s.Handle("/{id:[0-9]+}/close", handler.NewDefaultCasesCloseHandler())
 
 	n := negroni.Classic()
 	n.UseHandler(router)
