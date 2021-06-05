@@ -7,6 +7,7 @@ from itertools import chain
 
 print(os.getcwd())
 fileresponse = 'responses-record.csv'# file response
+input_fetch = 'twitter_fetch.csv'
 #workdir = os.chdir("..")#naik satu folder untuk ambil twitter-fetch
 #print(workdir)
 
@@ -18,7 +19,7 @@ payload = {}
 
 
 
-with open('twitter_fetch.csv','r') as f:
+with open(input_fetch,'r') as f:
     csvReader= csv.reader(f)
     line_counter=0
     for row in csvReader:

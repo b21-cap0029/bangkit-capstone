@@ -1,7 +1,6 @@
 #prepare for dependencies from tweepy
 
 import sys
-sys.path.append('/.../twitter-work')
 import os
 import csv
 import datetime
@@ -54,23 +53,6 @@ def pre_process(text):
     text = deEmojify(text)
 
     return text
-##set boundary entries
-language = ['id']
-#coordinates = []
-#filesave ='twitter_fetch'+(datetime.datetime.now().strftime("%Y-%m-%d %H:%M"))+'.csv'
-filesave = 'twitter_fetch.csv'
-#authentication to twitter
-auth = OAuthHandler(CONSUMER_KEY,CONSUMER_SECRET)
-auth.set_access_token(ACCESS_TOKEN,ACCESS_TOKEN_SECRET)
-api = tweepy.API(auth)
-
-#check API credentials
-
-try:   
-    api.verify_credentials()
-    print("Authentication Success")
-except:
-    print("Authentication error")
 
 #setup listener
 class Listener(StreamListener):
@@ -100,7 +82,23 @@ class Listener(StreamListener):
             csvWriter = csv.writer(f)
             csvWriter.writerow([id_user,name,id_tweet,text_tweet])
 
+##set boundary entries
+language = ['id']
+#coordinates = []
+#filesave ='twitter_fetch'+(datetime.datetime.now().strftime("%Y-%m-%d %H:%M"))+'.csv'
+filesave = 'twitter_fetch-text.csv'
+#authentication to twitter
+auth = OAuthHandler(CONSUMER_KEY,CONSUMER_SECRET)
+auth.set_access_token(ACCESS_TOKEN,ACCESS_TOKEN_SECRET)
+api = tweepy.API(auth)
 
+#check API credentials
+
+try:   
+    api.verify_credentials()
+    print("Authentication Success")
+except:
+    print("Authentication error")
 
 
 #creating the stream
