@@ -1,7 +1,7 @@
 FROM python:latest
-run  mkdir /app
-copy requirements.txt /app
-workdir /app
-run pip install -r requirements.txt 
-copy . /app
-cmd ["python","./streamer.py"]
+RUN  mkdir /app
+COPY requirements.txt /app
+WORKDIR /app
+RUN pip install -r requirements.txt 
+COPY . /app
+CMD ["python","./streamer.py"]
