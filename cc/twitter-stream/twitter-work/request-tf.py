@@ -14,7 +14,7 @@ input_fetch = 'twitter_fetch.csv'
 
 #Persiapan Requests API
 url="https://tensorflow-serving-4tl56tjpnq-as.a.run.app/v1/models/model:predict"#dummy load untuk setting request tensor 
-payload = {}
+
 #REQUEST BUILDER
 
 
@@ -22,6 +22,7 @@ payload = {}
 with open(input_fetch,'r') as f:
     csvReader= csv.reader(f)
     line_counter=0
+    payload = {}
     for row in csvReader:
         if line_counter == 0:#untuk skip row dan penanda
             line_counter =+ 1

@@ -83,10 +83,9 @@ class Listener(StreamListener):
             csvWriter.writerow([id_user,name,id_tweet,text_tweet])
 
 ##set boundary entries
-language = ['id']
-#coordinates = []
-#filesave ='twitter_fetch'+(datetime.datetime.now().strftime("%Y-%m-%d %H:%M"))+'.csv'
+language_setup = ['id']
 filesave = 'twitter_fetch-text.csv'
+keyword_track = ['kecemasan','lelah']
 #authentication to twitter
 auth = OAuthHandler(CONSUMER_KEY,CONSUMER_SECRET)
 auth.set_access_token(ACCESS_TOKEN,ACCESS_TOKEN_SECRET)
