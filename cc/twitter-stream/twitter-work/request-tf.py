@@ -4,6 +4,9 @@ import csv
 import os
 import os.path
 from itertools import chain
+from urllib.parse import urljoin
+
+TENSORFLOW_BASE_URL = os.getenv("TENSORFLOW_BASE_URL")
 
 print(os.getcwd())
 fileresponse = 'responses-record.csv'# file response
@@ -13,7 +16,7 @@ input_fetch = 'twitter_fetch.csv'
 
 
 #Persiapan Requests API
-url="https://tensorflow-serving-4tl56tjpnq-as.a.run.app/v1/models/model:predict"#dummy load untuk setting request tensor 
+url = urljoin(TENSORFLOW_BASE_URL, '/v1/models/model:predict')  #dummy load untuk setting request tensor
 
 #REQUEST BUILDER
 

@@ -7,13 +7,15 @@ import datetime
 import json
 import time
 import tweepy
-from API_KEY import (ACCESS_TOKEN, ACCESS_TOKEN_SECRET, CONSUMER_KEY,
-                     CONSUMER_SECRET)
 from tweepy import OAuthHandler, Stream
 from tweepy.streaming import StreamListener
 import re
 
 
+ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
+ACCESS_TOKEN_SECRET = os.getenv("ACCESS_TOKEN_SECRET")
+CONSUMER_KEY = os.getenv("CONSUMER_KEY")
+CONSUMER_SECRET = os.getenv("CONSUMER_SECRET")
 
 
 def deEmojify(text):

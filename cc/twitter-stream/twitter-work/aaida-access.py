@@ -5,10 +5,14 @@ import requests
 import csv
 import os
 import os.path
+from urllib.parse import urljoin
+
+
+AAIDA_BACKEND_BASE_URL= os.getenv("AAIDA_BACKEND_BASE_URL")
 
 print(os.getcwd())
 filename = 'responses-record.csv'
-url = 'https://aaida-backend-4tl56tjpnq-as.a.run.app/cases/submit'#dummy load dengan HTTP-POST
+url = urljoin(AAIDA_BACKEND_BASE_URL, 'cases/submit')  #dummy load dengan HTTP-POST
 treshold = 0.936 #defining treshold dari skor tensor 
 
 with open ('responses-record.csv','r') as record:#tidak ada kewajiban menulis file csv
