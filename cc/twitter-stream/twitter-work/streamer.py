@@ -10,12 +10,56 @@ import tweepy
 from tweepy import OAuthHandler, Stream
 from tweepy.streaming import StreamListener
 import re
+from itertools import chain
+from urllib.parse import urljoin
+import requests
+import os.path
 
 
 ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
 ACCESS_TOKEN_SECRET = os.getenv("ACCESS_TOKEN_SECRET")
 CONSUMER_KEY = os.getenv("CONSUMER_KEY")
 CONSUMER_SECRET = os.getenv("CONSUMER_SECRET")
+
+#builder tensor requests
+TENSORFLOW_BASE_URL = os.getenv("TENSORFLOW_BASE_URL")
+tensor_url = urljoin(TENSORFLOW_BASE_URL, '/v1/models/model:predict')
+
+#builder aaida-access
+AAIDA_BACKEND_BASE_URL= os.getenv("AAIDA_BACKEND_BASE_URL")
+url_aaida = urljoin(AAIDA_BACKEND_BASE_URL, 'cases/submit')  #dummy load dengan HTTP-POST
+
+#parameter extra
+treshold = 0.936
+
+def prediction(text_tweet,tensor_url):
+    request_input = {'instances':[[text_tweet]]}
+    json_dumps = json.dumps(request_input)
+    json_payload = json.loads(json_dumps)
+    resp = requests.post(tensor_url,json=json_payload)#atur parameter request disini(doc with requests)
+    result_dict = resp.json()  #ambil hasilnya dalam bentuk json. cari key response(hasil test dengan curl
+    #hasilnya result_dict["predictions"]
+    result = result_dict["predictions"]  #untuk mempermudah akses nilai
+    result_list = list(chain.from_iterable(result))
+    result = result_list[0] #hasil akhirnya ada di result
+    print(result)
+    return result
+
+def case_submit(id_user,id_tweet,pred_score,url_aaida,treshold):
+    payload = {}
+    payload["tweet_id"] = int(id_tweet)
+    if float(pred_score) >= float(treshold):#index[4] menyimpan score prediction
+        payload["class"] = "Teridentifikasi"
+    else:
+        payload["class"] = "tidak teridentifikasi"
+    payload["score"] = float(pred_score)#index[4]menimpan score prediction
+    payload["twitter_user_id"] = int(id_user)#menyimpan id twitter user
+    payload["is_claimed"] = False
+    payload["is_closed"] = False        
+    print(dict(payload)) #just test
+    resp = requests.post(url_aaida,json=payload)
+    print(f'{resp.status_code=} {resp.text=}')
+    return resp.status_code
 
 
 def deEmojify(text):
@@ -80,6 +124,8 @@ class Listener(StreamListener):
         text_tweet = json_tweet['text']
         text_tweet = pre_process(text_tweet)
         print(text_tweet)
+        pred_score = prediction(text_tweet=text_tweet,tensor_url=tensor_url)
+        case_submit(id_user=id_user,id_tweet=id_tweet,pred_score=pred_score,url_aaida=url_aaida,treshold=treshold)
         with open(filesave,'a', newline='') as f:
             csvWriter = csv.writer(f)
             csvWriter.writerow([id_user,name,id_tweet,text_tweet])
