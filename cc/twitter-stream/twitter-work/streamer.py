@@ -37,7 +37,7 @@ AAIDA_BACKEND_BASE_URL= os.getenv("AAIDA_BACKEND_BASE_URL")
 url_aaida = urljoin("https://aaida-backend-4tl56tjpnq-as.a.run.app",'/cases/submit')#test purpose
 
 #parameter extra
-treshold = 0.0001#hanya sementara.biar bisa langsung semuanya masuk 
+treshold = 0.936#Comply dengan model prediction
 ##set boundary entries
 language_setup = ['id']
 keyword_track = ['kecemasan','lelah']
