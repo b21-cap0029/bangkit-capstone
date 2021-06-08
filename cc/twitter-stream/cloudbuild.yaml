@@ -8,5 +8,5 @@ steps:
   args: ['run', 'deploy', 'streamer', '--image', 'gcr.io/bangkit-aaida/streamer:$TAG_NAME', '--region', 'asia-southeast1', '--platform', 'managed']
 
 
-  images: ['gcr.io/bangkit-aaida/streamer']
+images: ['gcr.io/bangkit-aaida/streamer']
 
