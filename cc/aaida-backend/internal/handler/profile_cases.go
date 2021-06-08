@@ -32,7 +32,7 @@ func (c *ProfileCasesHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) 
 	}
 
 	var cases []models.Case
-	c.db.Where("owner_id = ? AND is_claimed = false", user.ID).Find(&cases)
+	c.db.Where("owner_id = ? AND is_claimed = true", user.ID).Find(&cases)
 	if tx.Error != nil {
 		http.Error(w, tx.Error.Error(), http.StatusInternalServerError)
 		return
