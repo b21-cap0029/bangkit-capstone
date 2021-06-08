@@ -23,16 +23,17 @@ from API_KEY import (ACCESS_TOKEN, ACCESS_TOKEN_SECRET,
 #CONSUMER_KEY = os.getenv("CONSUMER_KEY")
 #CONSUMER_SECRET = os.getenv("CONSUMER_SECRET")
 
+
+#GLOBAL PARAMS & VARIABLES
 #builder tensor requests
 TENSORFLOW_BASE_URL = os.getenv("TENSORFLOW_BASE_URL")
-#tensor_url = urljoin(TENSORFLOW_BASE_URL, '/v1/models/model:predict')
-tensor_url = urljoin("https://tensorflow-serving-4tl56tjpnq-as.a.run.app",'/v1/models/model:predict')
+#tensor_url = urljoin(TENSORFLOW_BASE_URL, '/v1/models/model:predict')#prod 
+tensor_url = urljoin("https://tensorflow-serving-4tl56tjpnq-as.a.run.app",'/v1/models/model:predict')#test purpose
 
 #builder aaida-access
 AAIDA_BACKEND_BASE_URL= os.getenv("AAIDA_BACKEND_BASE_URL")
-#url_aaida = urljoin(AAIDA_BACKEND_BASE_URL, 'cases/submit')  #dummy load dengan HTTP-POST
-url_aaida = urljoin("https://aaida-backend-4tl56tjpnq-as.a.run.app",'/cases/submit')
-
+#url_aaida = urljoin(AAIDA_BACKEND_BASE_URL, 'cases/submit')  #prod
+url_aaida = urljoin("https://aaida-backend-4tl56tjpnq-as.a.run.app",'/cases/submit')#test purpose
 
 #parameter extra
 treshold = 0.0001#hanya sementara.biar bisa langsung semuanya masuk 
@@ -138,26 +139,29 @@ class Listener(StreamListener):
             csvWriter = csv.writer(f)
             csvWriter.writerow([id_user,name,id_tweet,text_tweet])"""
 
+def main():
+    #authentication to twitter
+    auth = OAuthHandler(CONSUMER_KEY,CONSUMER_SECRET)
+    auth.set_access_token(ACCESS_TOKEN,ACCESS_TOKEN_SECRET)
+    api = tweepy.API(auth)
 
-#authentication to twitter
-auth = OAuthHandler(CONSUMER_KEY,CONSUMER_SECRET)
-auth.set_access_token(ACCESS_TOKEN,ACCESS_TOKEN_SECRET)
-api = tweepy.API(auth)
+    #check API credentials
 
-#check API credentials
-
-try:   
-    api.verify_credentials()
-    print("Authentication Success")
-except:
-    print("Authentication error")
+    try:   
+        api.verify_credentials()
+        print("Authentication Success")
+    except:
+        print("Authentication error")
 
 
-#creating the stream
-customListener = Listener()
-customStream = Stream(auth, listener = customListener)
+    #creating the stream
+    customListener = Listener()
+    customStream = Stream(auth, listener = customListener)
 
-#start streaming
-#customStream.sample(languages=["id"])
-customStream.filter(track=['election','loser'],languages=["en","fr","es","id"])#batas bahasa indonesia wajib pakai track(APIKEYnya tidak dapat akses feed semua tweet)
-#filter track dalam list
+    #start streaming
+    #customStream.sample(languages=["id"])
+    customStream.filter(track=['cemas','lelah','kecewa','gelisah','nyerah'])#batas bahasa indonesia wajib pakai track(APIKEYnya tidak dapat akses feed semua tweet)
+    #filter track dalam list
+
+if __name__ == "__main__":
+    main()
