@@ -1,10 +1,18 @@
 # aaida-backend
 
-## Required Environment Variables
+## Environment Variables
+
+### Required
 
 - `TWITTER_CLIENT_ID`
 - `TWITTER_CLIENT_SECRET`
 - `TENSORFLOW_BASE_URL`
+
+### Optional
+
+- `POSTGRES_DSN`
+
+Will default to use sqlite3 if not provided
 
 ## Run server locally
 
@@ -24,9 +32,8 @@ make test
 make
 ```
 
-## Run using docker
+## Run using docker-compose
 
 ```bash
-docker build -t aaida .
-docker run -p 8000:8000 aaida
+docker-compose up -d
 ```

@@ -8,6 +8,7 @@ services:
       TWITTER_CLIENT_ID: twitterClientIdExample
       TWITTER_CLIENT_SECRET: twitterClientSecretExample
       TENSORFLOW_BASE_URL: http://tensorflow-serving:8501
+      POSTGRES_DSN: host=db user=user password=simplepassword dbname=db
 
   tensorflow-serving:
     image: gcr.io/bangkit-aaida/tensorflow-serving:v0.0.4
