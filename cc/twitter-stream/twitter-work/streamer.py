@@ -8,6 +8,7 @@ import json
 import time
 import tweepy
 from tweepy import OAuthHandler, Stream
+from tweepy.models import Status
 from tweepy.streaming import StreamListener
 import re
 from itertools import chain
@@ -146,7 +147,6 @@ def main():
     api = tweepy.API(auth)
 
     #check API credentials
-
     try:   
         api.verify_credentials()
         print("Authentication Success")
@@ -159,8 +159,12 @@ def main():
     customStream = Stream(auth, listener = customListener)
 
     #start streaming
-    #customStream.sample(languages=["id"])
-    customStream.filter(track=['cemas','lelah','kecewa','gelisah','nyerah'])#batas bahasa indonesia wajib pakai track(APIKEYnya tidak dapat akses feed semua tweet)
+    try:
+        customStream.filter(track=['cemas','lelah','kecewa','gelisah','nyerah'])
+    except Exception as e:
+        print("error occured")
+        print(e.__class__)
+        sys.exit(Status)
     #filter track dalam list
 
 if __name__ == "__main__":
