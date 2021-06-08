@@ -1,7 +1,12 @@
 steps:
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', 'gcr.io/$PROJECT_NAME/streamer', '.']
+  args: ['build', '-t', 'gcr.io/bangkit-aaida/streamer;$TAG_NAME', '.']
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['push', 'gcr.io/$PROJECT_NAME/streamer']
-images: ['gcr.io/$PROJECT_NAME/streamer']
+  args: ['push', 'gcr.io/bangkit-aaida/streamer:$TAG_NAME']
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: gcloud
+  args: ['run', 'deploy', 'streamer', '--image', 'gcr.io/bangkit-aaida/streamer:$TAG_NAME', '--region', 'asia-southeast1', '--platform', 'managed']
+
+
+  images: ['gcr.io/bangkit-aaida/streamer']
 
