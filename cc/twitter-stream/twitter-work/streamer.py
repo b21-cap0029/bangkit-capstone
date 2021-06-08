@@ -38,7 +38,6 @@ url_aaida = urljoin("https://aaida-backend-4tl56tjpnq-as.a.run.app",'/cases/subm
 treshold = 0.0001#hanya sementara.biar bisa langsung semuanya masuk 
 ##set boundary entries
 language_setup = ['id']
-filesave = 'twitter_fetch-text.csv'
 keyword_track = ['kecemasan','lelah']
 
 def prediction(text_tweet,tensor_url):
@@ -57,7 +56,7 @@ def prediction(text_tweet,tensor_url):
 def case_submit(id_user,id_tweet,pred_score,url_aaida,treshold):
     payload = {}
     payload["tweet_id"] = int(id_tweet)
-    if float(pred_score) >= float(treshold):#index[4] menyimpan score prediction
+    if float(pred_score) >= float(treshold):#untuk menandai 
         payload["class"] = "Teridentifikasi"
     else:
         payload["class"] = "tidak teridentifikasi"
@@ -65,7 +64,7 @@ def case_submit(id_user,id_tweet,pred_score,url_aaida,treshold):
     payload["twitter_user_id"] = int(id_user)#menyimpan id twitter user
     payload["is_claimed"] = False
     payload["is_closed"] = False        
-    print(dict(payload)) #just test
+    #print(dict(payload)) #just test
     resp = requests.post(url_aaida,json=payload)
     print(f'{resp.status_code=} {resp.text=}')
     return resp.status_code
@@ -135,9 +134,9 @@ class Listener(StreamListener):
         print(text_tweet)
         pred_score = prediction(text_tweet=text_tweet,tensor_url=tensor_url)
         case_submit(id_user=id_user,id_tweet=id_tweet,pred_score=pred_score,url_aaida=url_aaida,treshold=treshold)
-        with open(filesave,'a', newline='') as f:
+        """ with open(filesave,'a', newline='') as f:
             csvWriter = csv.writer(f)
-            csvWriter.writerow([id_user,name,id_tweet,text_tweet])
+            csvWriter.writerow([id_user,name,id_tweet,text_tweet])"""
 
 
 #authentication to twitter
@@ -157,12 +156,6 @@ except:
 #creating the stream
 customListener = Listener()
 customStream = Stream(auth, listener = customListener)
-
-#membuat filesave
-#BEWARE karena disini pakai mode W potensi ilang, ubah modenya untuk siap PROD
-with open (filesave, 'w', newline='') as csvFile:
-    csvWriter = csv.writer(csvFile)
-    csvWriter.writerow(['ID_USER', 'USERNAME','ID_TWEET','TWEET_TEXT'])
 
 #start streaming
 #customStream.sample(languages=["id"])
