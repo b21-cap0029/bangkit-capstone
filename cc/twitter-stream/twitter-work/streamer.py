@@ -15,22 +15,31 @@ from urllib.parse import urljoin
 import requests
 import os.path
 
+from API_KEY import (ACCESS_TOKEN, ACCESS_TOKEN_SECRET,
+                    CONSUMER_KEY, CONSUMER_SECRET)
 
-ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
-ACCESS_TOKEN_SECRET = os.getenv("ACCESS_TOKEN_SECRET")
-CONSUMER_KEY = os.getenv("CONSUMER_KEY")
-CONSUMER_SECRET = os.getenv("CONSUMER_SECRET")
+#ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
+#ACCESS_TOKEN_SECRET = os.getenv("ACCESS_TOKEN_SECRET")
+#CONSUMER_KEY = os.getenv("CONSUMER_KEY")
+#CONSUMER_SECRET = os.getenv("CONSUMER_SECRET")
 
 #builder tensor requests
 TENSORFLOW_BASE_URL = os.getenv("TENSORFLOW_BASE_URL")
-tensor_url = urljoin(TENSORFLOW_BASE_URL, '/v1/models/model:predict')
+#tensor_url = urljoin(TENSORFLOW_BASE_URL, '/v1/models/model:predict')
+tensor_url = urljoin("https://tensorflow-serving-4tl56tjpnq-as.a.run.app",'/v1/models/model:predict')
 
 #builder aaida-access
 AAIDA_BACKEND_BASE_URL= os.getenv("AAIDA_BACKEND_BASE_URL")
-url_aaida = urljoin(AAIDA_BACKEND_BASE_URL, 'cases/submit')  #dummy load dengan HTTP-POST
+#url_aaida = urljoin(AAIDA_BACKEND_BASE_URL, 'cases/submit')  #dummy load dengan HTTP-POST
+url_aaida = urljoin("https://aaida-backend-4tl56tjpnq-as.a.run.app",'/cases/submit')
+
 
 #parameter extra
-treshold = 0.936
+treshold = 0.0001#hanya sementara.biar bisa langsung semuanya masuk 
+##set boundary entries
+language_setup = ['id']
+filesave = 'twitter_fetch-text.csv'
+keyword_track = ['kecemasan','lelah']
 
 def prediction(text_tweet,tensor_url):
     request_input = {'instances':[[text_tweet]]}
@@ -130,10 +139,7 @@ class Listener(StreamListener):
             csvWriter = csv.writer(f)
             csvWriter.writerow([id_user,name,id_tweet,text_tweet])
 
-##set boundary entries
-language_setup = ['id']
-filesave = 'twitter_fetch-text.csv'
-keyword_track = ['kecemasan','lelah']
+
 #authentication to twitter
 auth = OAuthHandler(CONSUMER_KEY,CONSUMER_SECRET)
 auth.set_access_token(ACCESS_TOKEN,ACCESS_TOKEN_SECRET)
