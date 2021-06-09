@@ -21,13 +21,13 @@ from flask import request
 #flask starter
 app = Flask(__name__)
 
-#from API_KEY import (ACCESS_TOKEN, ACCESS_TOKEN_SECRET,
-#                    CONSUMER_KEY, CONSUMER_SECRET)
+from API_KEY import (ACCESS_TOKEN, ACCESS_TOKEN_SECRET,
+                    CONSUMER_KEY, CONSUMER_SECRET)
 
-ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
-ACCESS_TOKEN_SECRET = os.getenv("ACCESS_TOKEN_SECRET")
-CONSUMER_KEY = os.getenv("CONSUMER_KEY")
-CONSUMER_SECRET = os.getenv("CONSUMER_SECRET")
+#ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
+#ACCESS_TOKEN_SECRET = os.getenv("ACCESS_TOKEN_SECRET")
+#CONSUMER_KEY = os.getenv("CONSUMER_KEY")
+#CONSUMER_SECRET = os.getenv("CONSUMER_SECRET")
 
 
 #GLOBAL PARAMS & VARIABLES
@@ -145,7 +145,7 @@ class Listener(StreamListener):
             csvWriter = csv.writer(f)
             csvWriter.writerow([id_user,name,id_tweet,text_tweet])"""
 
-@app.route('/main', methods = ['POST'])
+@app.route('/main', methods = ['GET'])
 def main():
     #authentication to twitter
     auth = OAuthHandler(CONSUMER_KEY,CONSUMER_SECRET)
@@ -153,8 +153,8 @@ def main():
     api = tweepy.API(auth)
 
     #flask work
-    content = request.data()
-    key_track = content["key_track"]
+    #content = request.data()
+    #key_track = content["key_track"]
 
     #check API credentials
     try:   
@@ -170,12 +170,17 @@ def main():
 
     #start streaming
     try:
-        customStream.filter(track=key_track)
-    except Exception as e:
+        customStream.filter(track=keyword_track)
+    except tweepy.TweepError as e:
         print("error occured")
-        print(e.__class__)
-        sys.exit(Status)
+        print(e.api_code,e.args,e.reason,e.response)
+        return("error occured, "+ e.__class__,"worker stop now")
     #filter track dalam list
 
+
+@app.route('/', methods=['GET'])
+def welcomer():
+    return "welcome in"
+
 if __name__ == "__main__":
-    app.run(host='127.0.0.1',port=9090)
+    app.run()
