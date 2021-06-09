@@ -6,6 +6,7 @@ import csv
 import datetime
 import json
 import time
+import flask
 import tweepy
 from tweepy import OAuthHandler, Stream
 from tweepy.models import Status
@@ -15,6 +16,10 @@ from itertools import chain
 from urllib.parse import urljoin
 import requests
 import os.path
+from flask import Flask, redirect,url_for
+from flask import request
+#flask starter
+app = Flask(__name__)
 
 #from API_KEY import (ACCESS_TOKEN, ACCESS_TOKEN_SECRET,
 #                    CONSUMER_KEY, CONSUMER_SECRET)
@@ -140,11 +145,16 @@ class Listener(StreamListener):
             csvWriter = csv.writer(f)
             csvWriter.writerow([id_user,name,id_tweet,text_tweet])"""
 
+@app.route('/main', methods = ['POST'])
 def main():
     #authentication to twitter
     auth = OAuthHandler(CONSUMER_KEY,CONSUMER_SECRET)
     auth.set_access_token(ACCESS_TOKEN,ACCESS_TOKEN_SECRET)
     api = tweepy.API(auth)
+
+    #flask work
+    content = request.data()
+    key_track = content["key_track"]
 
     #check API credentials
     try:   
@@ -160,7 +170,7 @@ def main():
 
     #start streaming
     try:
-        customStream.filter(track=['cemas','lelah','kecewa','gelisah','nyerah'])
+        customStream.filter(track=key_track)
     except Exception as e:
         print("error occured")
         print(e.__class__)
@@ -168,4 +178,4 @@ def main():
     #filter track dalam list
 
 if __name__ == "__main__":
-    main()
+    app.run(host='127.0.0.1',port=9090)
