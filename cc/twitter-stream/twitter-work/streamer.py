@@ -1,20 +1,80 @@
 #prepare for dependencies from tweepy
 
 import sys
-sys.path.append('/.../twitter-work')
 import os
 import csv
 import datetime
 import json
 import time
+import flask
 import tweepy
-from API_KEY import (ACCESS_TOKEN, ACCESS_TOKEN_SECRET, CONSUMER_KEY,
-                     CONSUMER_SECRET)
 from tweepy import OAuthHandler, Stream
+from tweepy.models import Status
 from tweepy.streaming import StreamListener
 import re
+from itertools import chain
+from urllib.parse import urljoin
+import requests
+import os.path
+from flask import Flask, redirect,url_for
+from flask import request
+#flask starter
+app = Flask(__name__)
+
+#from API_KEY import (ACCESS_TOKEN, ACCESS_TOKEN_SECRET,
+#                    CONSUMER_KEY, CONSUMER_SECRET)
+
+ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
+ACCESS_TOKEN_SECRET = os.getenv("ACCESS_TOKEN_SECRET")
+CONSUMER_KEY = os.getenv("CONSUMER_KEY")
+CONSUMER_SECRET = os.getenv("CONSUMER_SECRET")
 
 
+#GLOBAL PARAMS & VARIABLES
+#builder tensor requests
+TENSORFLOW_BASE_URL = os.getenv("TENSORFLOW_BASE_URL")
+tensor_url = urljoin(TENSORFLOW_BASE_URL, '/v1/models/model:predict')#prod 
+#tensor_url = urljoin("https://tensorflow-serving-4tl56tjpnq-as.a.run.app",'/v1/models/model:predict')#test purpose
+
+#builder aaida-access
+AAIDA_BACKEND_BASE_URL= os.getenv("AAIDA_BACKEND_BASE_URL")
+url_aaida = urljoin(AAIDA_BACKEND_BASE_URL, 'cases/submit')  #prod
+#url_aaida = urljoin("https://aaida-backend-4tl56tjpnq-as.a.run.app",'/cases/submit')#test purpose
+
+#parameter extra
+treshold = 0.936#Comply dengan model prediction
+##set boundary entries
+language_setup = ['id']
+keyword_track = ['kecemasan','lelah']
+
+def prediction(text_tweet,tensor_url):
+    request_input = {'instances':[[text_tweet]]}
+    json_dumps = json.dumps(request_input)
+    json_payload = json.loads(json_dumps)
+    resp = requests.post(tensor_url,json=json_payload)#atur parameter request disini(doc with requests)
+    result_dict = resp.json()  #ambil hasilnya dalam bentuk json. cari key response(hasil test dengan curl
+    #hasilnya result_dict["predictions"]
+    result = result_dict["predictions"]  #untuk mempermudah akses nilai
+    result_list = list(chain.from_iterable(result))
+    result = result_list[0] #hasil akhirnya ada di result
+    print(result)
+    return result
+
+def case_submit(id_user,id_tweet,pred_score,url_aaida,treshold):
+    payload = {}
+    payload["tweet_id"] = int(id_tweet)
+    if float(pred_score) >= float(treshold):#untuk menandai 
+        payload["class"] = "Teridentifikasi"
+    else:
+        payload["class"] = "tidak teridentifikasi"
+    payload["score"] = float(pred_score)#index[4]menimpan score prediction
+    payload["twitter_user_id"] = int(id_user)#menyimpan id twitter user
+    payload["is_claimed"] = False
+    payload["is_closed"] = False        
+    #print(dict(payload)) #just test
+    resp = requests.post(url_aaida,json=payload)
+    print(f'{resp.status_code=} {resp.text=}')
+    return resp.status_code
 
 
 def deEmojify(text):
@@ -54,23 +114,6 @@ def pre_process(text):
     text = deEmojify(text)
 
     return text
-##set boundary entries
-language = ['id']
-#coordinates = []
-#filesave ='twitter_fetch'+(datetime.datetime.now().strftime("%Y-%m-%d %H:%M"))+'.csv'
-filesave = 'twitter_fetch.csv'
-#authentication to twitter
-auth = OAuthHandler(CONSUMER_KEY,CONSUMER_SECRET)
-auth.set_access_token(ACCESS_TOKEN,ACCESS_TOKEN_SECRET)
-api = tweepy.API(auth)
-
-#check API credentials
-
-try:   
-    api.verify_credentials()
-    print("Authentication Success")
-except:
-    print("Authentication error")
 
 #setup listener
 class Listener(StreamListener):
@@ -96,24 +139,53 @@ class Listener(StreamListener):
         text_tweet = json_tweet['text']
         text_tweet = pre_process(text_tweet)
         print(text_tweet)
-        with open(filesave,'a', newline='') as f:
+        pred_score = prediction(text_tweet=text_tweet,tensor_url=tensor_url)
+        case_submit(id_user=id_user,id_tweet=id_tweet,pred_score=pred_score,url_aaida=url_aaida,treshold=treshold)
+        """ with open(filesave,'a', newline='') as f:
             csvWriter = csv.writer(f)
-            csvWriter.writerow([id_user,name,id_tweet,text_tweet])
+            csvWriter.writerow([id_user,name,id_tweet,text_tweet])"""
+
+@app.route('/main', methods = ['GET'])
+def main():
+    #authentication to twitter
+    auth = OAuthHandler(CONSUMER_KEY,CONSUMER_SECRET)
+    auth.set_access_token(ACCESS_TOKEN,ACCESS_TOKEN_SECRET)
+    api = tweepy.API(auth)
+
+    #flask work
+    #content = request.data()
+    #key_track = content["key_track"]
+
+    #check API credentials
+    try:   
+        api.verify_credentials()
+        print("Authentication Success")
+    except:
+        print("Authentication error")
 
 
+    #creating the stream
+    customListener = Listener()
+    customStream = Stream(auth, listener = customListener)
+
+    #start streaming
+    try:
+        customStream.filter(track=keyword_track,is_async=True)
+        runtime = 120 #menandai lamanya 2mnt
+        time.sleep(runtime)
+        customStream.disconnect()
+    except tweepy.TweepError as e:
+        print("error occured")
+        print(e.api_code,e.args,e.reason,e.response)
+        return("error occured, "+ e.__class__,"worker stop now")
+    else:
+        return ("work done for "+ str(runtime))
+    #filter track dalam list
 
 
-#creating the stream
-customListener = Listener()
-customStream = Stream(auth, listener = customListener)
+@app.route('/', methods=['GET'])
+def welcomer():
+    return "welcome in"
 
-#membuat filesave
-#BEWARE karena disini pakai mode W potensi ilang, ubah modenya untuk siap PROD
-with open (filesave, 'w', newline='') as csvFile:
-    csvWriter = csv.writer(csvFile)
-    csvWriter.writerow(['ID_USER', 'USERNAME','ID_TWEET','TWEET_TEXT'])
-
-#start streaming
-#customStream.sample(languages=["id"])
-customStream.filter(track=['election','loser'],languages=["en","fr","es","id"])#batas bahasa indonesia wajib pakai track(APIKEYnya tidak dapat akses feed semua tweet)
-#filter track dalam list
+if __name__ == "__main__":
+    app.run(host='0.0.0.0',port=9000)

@@ -5,20 +5,22 @@ import requests
 import csv
 import os
 import os.path
+from urllib.parse import urljoin
+
+
+AAIDA_BACKEND_BASE_URL= os.getenv("AAIDA_BACKEND_BASE_URL")
 
 print(os.getcwd())
 filename = 'responses-record.csv'
-url = 'https://aaida-backend-4tl56tjpnq-as.a.run.app/cases/submit'#dummy load dengan HTTP-POST
-payload = {} #structure dasar payload
+url = urljoin(AAIDA_BACKEND_BASE_URL, 'cases/submit')  #dummy load dengan HTTP-POST
 treshold = 0.936 #defining treshold dari skor tensor 
 
 with open ('responses-record.csv','r') as record:#tidak ada kewajiban menulis file csv
     record_counter = 0
+    payload = {} #structure dasar payload
     csvReader = csv.reader(record)
     for line in csvReader:
         print(line)
-        now = datetime.now()#input waktu created
-        calendar = now.isoformat()
         payload["tweet_id"] = int(line[2])# index[2] menyimpan tweet_id
         if float(line[4]) >= treshold:#index[4] menyimpan score prediction
             payload["class"] = "Teridentifikasi"
