@@ -170,11 +170,16 @@ def main():
 
     #start streaming
     try:
-        customStream.filter(track=keyword_track)
+        customStream.filter(track=keyword_track,is_async=True)
+        runtime = 120 #menandai lamanya 2mnt
+        time.sleep(runtime)
+        customStream.disconnect()
     except tweepy.TweepError as e:
         print("error occured")
         print(e.api_code,e.args,e.reason,e.response)
         return("error occured, "+ e.__class__,"worker stop now")
+    else:
+        return ("work done for "+ str(runtime))
     #filter track dalam list
 
 
@@ -183,4 +188,4 @@ def welcomer():
     return "welcome in"
 
 if __name__ == "__main__":
-    app.run()
+    app.run(port=9000)
