@@ -28,4 +28,12 @@ steps:
   entrypoint: gcloud
   args: ['run', 'deploy', 'tensorflow-serving', '--image', 'gcr.io/bangkit-aaida/tensorflow-serving:$TAG_NAME', '--region', 'asia-southeast1', '--platform', 'managed']
 
-images: ['gcr.io/bangkit-aaida/aaida-backend:$TAG_NAME', 'gcr.io/bangkit-aaida/tensorflow-serving:$TAG_NAME']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '--tag=gcr.io/bangkit-aaida/streamer:$TAG_NAME', './cc/twitter-stream']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/bangkit-aaida/streamer:$TAG_NAME']
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: gcloud
+  args: ['run', 'deploy', 'streamer', '--image', 'gcr.io/bangkit-aaida/streamer:$TAG_NAME', '--region', 'asia-southeast1', '--platform', 'managed']
+
+images: ['gcr.io/bangkit-aaida/aaida-backend:$TAG_NAME', 'gcr.io/bangkit-aaida/tensorflow-serving:$TAG_NAME', 'gcr.io/bangkit-aaida/streamer:$TAG_NAME']
