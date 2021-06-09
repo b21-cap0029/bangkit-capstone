@@ -7,6 +7,8 @@
 
     ACCESS_TOKEN= "***"
     ACCESS_TOKEN_SECRET = "***"
+    AAIDA_BACKEND_BASE_URL="***"
+    TENSORFLOW_BASE_URL="***"
     ```
 
 ## build images
