@@ -1,4 +1,4 @@
-# Cara menggunakan Streamer 
+# Cara menggunakan Streamer (local)
 1.  persiapkan environment variable untuk menyimpan API_KEY
     ```
     CONSUMER_KEY = "***"
