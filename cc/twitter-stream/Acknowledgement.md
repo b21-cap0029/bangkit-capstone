@@ -14,5 +14,5 @@ Purposes : HTTP(s) communication with other services
 
 ## flask  
 link : https://github.com/pallets/flask/  
-License : BSD-3-Clause License 
+License : BSD-3-Clause License  
 Purpose : Creating API Server streamer
